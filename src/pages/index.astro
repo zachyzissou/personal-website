@@ -1,0 +1,1357 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Timeline from '../components/Timeline';
+import ProjectShowcase from '../components/ProjectShowcase';
+import EasterEgg from '../components/EasterEgg';
+import AnimatedStats from '../components/AnimatedStats';
+---
+
+<Layout title="Zach Gonser - Tech Wizard & Homelab Architect">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      /* DESIGN SYSTEM COLORS */
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-tertiary: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      --accent-primary: #a855f7;
+      --accent-secondary: #06b6d4;
+      --accent-tertiary: #10b981;
+      --border-color: #27272a;
+      --glow: rgba(139, 92, 246, 0.3);
+      
+      /* DESIGN SYSTEM SPACING (8px base scale) */
+      --space-xs: 0.5rem;    /* 8px */
+      --space-sm: 1rem;      /* 16px */
+      --space-md: 1.5rem;    /* 24px */
+      --space-lg: 2rem;      /* 32px */
+      --space-xl: 3rem;      /* 48px */
+      --space-2xl: 4rem;     /* 64px */
+      --space-3xl: 6rem;     /* 96px */
+      --space-4xl: 8rem;     /* 128px */
+      
+      /* DESIGN SYSTEM LAYOUT */
+      --max-width-content: 70rem;     /* 1120px - main content */
+      --max-width-text: 48rem;        /* 768px - readable text */
+      --max-width-narrow: 32rem;      /* 512px - narrow content */
+      
+      /* DESIGN SYSTEM TYPOGRAPHY SCALE */
+      --text-xs: 0.75rem;     /* 12px */
+      --text-sm: 0.875rem;    /* 14px */
+      --text-base: 1rem;      /* 16px */
+      --text-lg: 1.125rem;    /* 18px */
+      --text-xl: 1.25rem;     /* 20px */
+      --text-2xl: 1.5rem;     /* 24px */
+      --text-3xl: 1.875rem;   /* 30px */
+      --text-4xl: 2.25rem;    /* 36px */
+      --text-5xl: 3rem;       /* 48px */
+      --text-6xl: 3.75rem;    /* 60px */
+      
+      /* DESIGN SYSTEM BORDER RADIUS */
+      --radius-sm: 0.5rem;    /* 8px - small radius */
+      --radius-md: 0.75rem;   /* 12px - medium radius */
+      --radius-lg: 1rem;      /* 16px - large radius */
+      --radius-xl: 1.5rem;    /* 24px - extra large radius */
+      --radius-2xl: 2rem;     /* 32px - button/card radius */
+      --radius-full: 50%;     /* circular */
+      
+      /* DESIGN SYSTEM SECTION BACKGROUNDS */
+      --bg-hero: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, transparent 50%, rgba(6, 182, 212, 0.03) 100%);
+      --bg-journey: linear-gradient(180deg, var(--bg-primary) 0%, rgba(17, 17, 17, 0.8) 100%);
+      --bg-homelab: linear-gradient(45deg, var(--bg-primary) 0%, rgba(30, 41, 59, 0.3) 50%, var(--bg-primary) 100%);
+      --bg-projects: linear-gradient(90deg, var(--bg-primary) 0%, rgba(139, 92, 246, 0.02) 50%, var(--bg-primary) 100%);
+      --bg-about: linear-gradient(225deg, var(--bg-primary) 0%, rgba(16, 185, 129, 0.02) 50%, var(--bg-primary) 100%);
+      --bg-contact: linear-gradient(135deg, var(--bg-primary) 0%, rgba(6, 182, 212, 0.02) 50%, var(--bg-primary) 100%);
+      
+      /* Enhanced visual effects */
+      --focus-ring: 0 0 0 3px rgba(168, 85, 247, 0.5);
+      --premium-glow: 0 0 40px rgba(168, 85, 247, 0.15), 0 0 80px rgba(6, 182, 212, 0.1);
+      --premium-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 100px rgba(168, 85, 247, 0.1);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shimmer-gradient: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary), var(--accent-primary));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 6s ease-in-out infinite;
+      position: relative;
+    }
+    
+    .gradient-text::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--shimmer-gradient);
+      animation: shimmer 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-hero);
+      animation: heroGlow 8s ease-in-out infinite;
+    }
+
+    @keyframes heroGlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: var(--max-width-content);
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(var(--text-5xl), 8vw, 6rem);
+      font-weight: 900;
+      margin-bottom: var(--space-md);
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(var(--text-lg), 3vw, var(--text-2xl));
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .hero-description {
+      font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+      max-width: var(--max-width-text);
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (min-width: 640px) {
+      .hero-buttons {
+        flex-direction: row;
+        gap: var(--space-md);
+      }
+    }
+
+    .btn {
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: var(--text-lg);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      display: inline-block;
+      position: relative;
+    }
+
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .btn:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), #9333ea);
+      color: white;
+      box-shadow: var(--premium-shadow);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--shimmer-gradient);
+      transition: left 0.6s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: var(--premium-glow), var(--premium-shadow);
+      border-color: rgba(168, 85, 247, 0.6);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(6, 182, 212, 0.1);
+      overflow: hidden;
+    }
+
+    .btn-secondary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, var(--accent-secondary), #0891b2);
+      color: white;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), 0 15px 35px rgba(6, 182, 212, 0.1);
+      border-color: var(--accent-secondary);
+    }
+
+    .btn-secondary:hover::before {
+      left: 100%;
+    }
+
+    .section {
+      padding: var(--space-4xl) var(--space-md);
+    }
+
+    .container {
+      max-width: var(--max-width-content);
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .section-title {
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-5xl));
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+      text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Professional Journey */
+    .journey {
+      background: var(--bg-journey);
+    }
+
+    .timeline {
+      position: relative;
+      max-width: var(--max-width-narrow);
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent-primary);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-2xl);
+      padding: 0 var(--space-lg);
+    }
+
+    .timeline-item:nth-child(even) .timeline-card {
+      margin-left: 50%;
+      padding-left: var(--space-lg);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-card {
+      margin-right: 50%;
+      padding-right: var(--space-lg);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      top: 1rem;
+      width: 1rem;
+      height: 1rem;
+      background: var(--accent-primary);
+      border: 3px solid var(--bg-primary);
+      border-radius: var(--radius-full);
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .timeline-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .job-title {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .job-company {
+      font-size: var(--text-lg);
+      color: var(--accent-secondary);
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+
+    .job-dates {
+      display: inline-block;
+      background: var(--accent-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+    }
+
+    .job-summary {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Homelab Empire */
+    .homelab {
+      background: var(--bg-homelab);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .service-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--shimmer-gradient);
+      transition: left 0.6s ease;
+      pointer-events: none;
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--premium-glow);
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .service-card:hover::before {
+      left: 100%;
+    }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .service-icon {
+      font-size: var(--text-4xl);
+      margin-right: 0.75rem;
+    }
+
+    .service-title {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .service-list {
+      list-style: none;
+      color: var(--text-secondary);
+    }
+
+    .service-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--space-xs);
+    }
+
+    .service-list li::before {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      background: var(--accent-primary);
+      border-radius: var(--radius-full);
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .stats-grid {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: stretch !important;
+      gap: var(--space-lg);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg) var(--space-xl);
+      text-align: center;
+      box-shadow: var(--premium-shadow);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      margin-bottom: var(--space-xl);
+    }
+    
+    .stats-grid > * {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+
+    .stats-grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--shimmer-gradient);
+      animation: shimmer 4s infinite;
+      pointer-events: none;
+    }
+
+    .stat-number {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      color: var(--accent-primary);
+      display: block;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    /* About Section */
+    .about {
+      background: var(--bg-about);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .about-text {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .about-text p {
+      margin-bottom: var(--space-md);
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-xs);
+    }
+
+    .tool-tag {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .tool-tag:hover {
+      background: var(--accent-primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Contact */
+    .contact {
+      background: var(--bg-contact);
+      position: relative;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .contact-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--shimmer-gradient);
+      transition: left 0.6s ease;
+      pointer-events: none;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--premium-glow);
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-card:hover::before {
+      left: 100%;
+    }
+
+    .contact-card:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring), 0 10px 30px rgba(0, 0, 0, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .contact-card:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    .contact-icon {
+      font-size: var(--text-4xl);
+      margin-bottom: var(--space-sm);
+      display: block;
+    }
+
+    .contact-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .contact-value {
+      color: var(--accent-primary);
+    }
+
+    /* 3D Flip Card Styles */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    
+    .preserve-3d {
+      transform-style: preserve-3d;
+    }
+    
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    /* Hyperspace Animation Styles */
+    .bg-gradient-radial {
+      background: radial-gradient(circle, var(--tw-gradient-stops));
+    }
+
+    /* Floating Particles Animation */
+    .floating-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: var(--radius-full);
+      animation: float 20s infinite linear;
+      opacity: 0.6;
+    }
+
+    .particle-1 {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-primary);
+      top: 20%;
+      left: 10%;
+      animation-duration: 25s;
+      animation-delay: 0s;
+    }
+
+    .particle-2 {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-secondary);
+      top: 60%;
+      left: 80%;
+      animation-duration: 30s;
+      animation-delay: -5s;
+    }
+
+    .particle-3 {
+      width: 3px;
+      height: 3px;
+      background: var(--accent-tertiary);
+      top: 80%;
+      left: 20%;
+      animation-duration: 35s;
+      animation-delay: -10s;
+    }
+
+    .particle-4 {
+      width: 5px;
+      height: 5px;
+      background: var(--accent-primary);
+      top: 30%;
+      left: 70%;
+      animation-duration: 28s;
+      animation-delay: -15s;
+    }
+
+    .particle-5 {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-secondary);
+      top: 70%;
+      left: 30%;
+      animation-duration: 32s;
+      animation-delay: -20s;
+    }
+
+    .particle-6 {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-tertiary);
+      top: 10%;
+      left: 90%;
+      animation-duration: 26s;
+      animation-delay: -25s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Tablet Responsiveness */
+    @media (max-width: 1024px) {
+      /* Services Grid Tablet */
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+      }
+      
+      /* Stats Grid Tablet - Keep horizontal flexbox */
+      .stats-grid {
+        flex-direction: row !important;
+        gap: var(--space-md);
+        padding: var(--space-lg);
+      }
+      
+      .stat-number {
+        font-size: var(--text-3xl);
+      }
+      
+      .stat-label {
+        font-size: var(--text-xs);
+      }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      /* Timeline Mobile */
+      .timeline-item:nth-child(even) .timeline-card,
+      .timeline-item:nth-child(odd) .timeline-card {
+        margin-left: var(--space-lg);
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .timeline::before {
+        left: 1rem;
+      }
+
+      .timeline-dot {
+        left: 1rem;
+      }
+
+      /* Services Grid Mobile */
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+
+      /* Stats Grid Mobile - Keep horizontal flexbox but tighter spacing */
+      .stats-grid {
+        flex-direction: row !important;
+        gap: var(--space-xs);
+        padding: var(--space-md);
+      }
+      
+      .stat-number {
+        font-size: var(--text-2xl);
+      }
+      
+      .stat-label {
+        font-size: var(--text-xs);
+        line-height: 1.3;
+      }
+
+      /* Contact Grid Mobile */
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+      }
+
+      /* Hero Mobile */
+      .hero {
+        padding: var(--space-sm);
+        min-height: 85vh;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Section Padding Mobile */
+      .section {
+        padding: var(--space-xl) var(--space-sm);
+      }
+
+      .section-title {
+        font-size: clamp(var(--text-2xl), 8vw, var(--text-4xl));
+        margin-bottom: var(--space-lg);
+      }
+
+      /* Project Cards Mobile - Single Column */
+      .projects-showcase .grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+      }
+
+      /* Tools Grid Mobile */
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xs);
+      }
+
+      .tool-tag {
+        padding: var(--space-xs);
+        font-size: var(--text-sm);
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Extra Small Mobile - Keep horizontal flexbox but smaller */
+      .stats-grid {
+        flex-direction: row !important;
+        gap: var(--space-xs);
+        padding: var(--space-sm);
+      }
+      
+      .stat-number {
+        font-size: var(--text-3xl);
+      }
+      
+      .stat-label {
+        font-size: var(--text-xs);
+        line-height: 1.3;
+      }
+
+      .hero-subtitle {
+        flex-direction: column;
+        gap: var(--space-xs);
+      }
+
+      .service-card {
+        padding: var(--space-sm);
+      }
+
+      .timeline-card {
+        padding: var(--space-sm);
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- Floating Particles Background -->
+  <div class="floating-particles">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <h1 class="gradient-text">Zach Gonser</h1>
+      <div class="hero-subtitle flex items-center justify-center gap-3">
+        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Tech Wizard & Homelab Architect
+        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+        </svg>
+      </div>
+      <p class="hero-description">
+        Where bleeding-edge tech meets caffeinated obsession. Ex-DoorDash, ex-Apple. Currently orchestrating beverage robotics at scale while maintaining a homelab that would make enterprise architects weep with envy. Because why use the cloud when you can be the cloud?
+      </p>
+      <div class="hero-buttons">
+        <a href="#homelab" class="btn btn-primary flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+          Explore The Digital Empire
+        </a>
+        <a href="#journey" class="btn btn-secondary flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          View Battle History
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Professional Journey -->
+  <section id="journey" class="section journey relative">
+    <div class="container relative z-10">
+      <h2 class="section-title gradient-text mb-16">Battle-Tested Experience</h2>
+      <Timeline client:load />
+    </div>
+  </section>
+
+  <!-- Homelab Empire -->
+  <section id="homelab" class="section homelab">
+    <div class="container">
+      <h2 class="section-title" style="color: white;">The Digital Empire</h2>
+      <p style="text-align: center; color: var(--text-secondary); font-size: var(--text-lg); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
+        A self-hosted infrastructure orchestrating 50+ Docker containers across segmented VLANs. From AI model inference to autonomous media curation - all behind a reverse proxy fortress that would make enterprise architects shed tears of jealousy.
+      </p>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v18a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1h2a1 1 0 011 1v1m0 0h8m-8 0V1a1 1 0 00-1-1H4a1 1 0 00-1 1v18a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1h-2a1 1 0 00-1 1v1z"/>
+            </svg>
+            <h3 class="service-title">Media Empire</h3>
+          </div>
+          <ul class="service-list">
+            <li>Plex/Jellyfin for media streaming</li>
+            <li>Arr stack for content management</li>
+            <li>Multi-room audio systems</li>
+            <li>4K transcoding that actually works</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <h3 class="service-title">AI Playground</h3>
+          </div>
+          <ul class="service-list">
+            <li>Stable Diffusion models</li>
+            <li>Local LLMs via BigAGI/Open WebUI</li>
+            <li>Personal AI assistant pipeline</li>
+            <li>Custom model fine-tuning</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <h3 class="service-title">Automation Hub</h3>
+          </div>
+          <ul class="service-list">
+            <li>n8n workflows for everything</li>
+            <li>Home Assistant integrations</li>
+            <li>Zero-downtime update scripts</li>
+            <li>Cross-container orchestration</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <h3 class="service-title">Monitoring Stack</h3>
+          </div>
+          <ul class="service-list">
+            <li>Grafana dashboards that sparkle</li>
+            <li>Uptime monitoring with alerts</li>
+            <li>Performance metrics aggregation</li>
+            <li>Log analysis and correlation</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+            <h3 class="service-title">Network Magic</h3>
+          </div>
+          <ul class="service-list">
+            <li>Unifi-managed VLANs (3+ segments)</li>
+            <li>Reverse proxy perfection</li>
+            <li>Dynamic DNS routing</li>
+            <li>VPN gateways & DNS filtering</li>
+          </ul>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <svg class="service-icon w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <h3 class="service-title">Dev & Ops</h3>
+          </div>
+          <ul class="service-list">
+            <li>Git hosting & CI/CD pipelines</li>
+            <li>Custom deployment environments</li>
+            <li>Backup & disaster recovery</li>
+            <li>Because why use the cloud?</li>
+          </ul>
+        </div>
+      </div>
+
+      <AnimatedStats client:load />
+    </div>
+  </section>
+
+  <!-- Project Showcase -->
+  <ProjectShowcase client:load />
+
+  <!-- About Me -->
+  <section class="section about relative">
+    <div class="container relative z-10">
+      <h2 class="section-title gradient-text">The Neural Network Behind The Magic</h2>
+      
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            Greetings, fellow digital explorer! I'm the architect of autonomous systems and the whisperer of wayward Docker containers. 
+            My brain operates on a continuous integration loop of curiosity, caffeine, and the irresistible urge to automate anything that moves.
+          </p>
+          
+          <p>
+            When I'm not orchestrating beverage robotics across the continental United States at Botrista, 
+            you'll find me in my digital sanctum, communing with AI models that consume more power than a small city. 
+            My homelab doesn't just run services – it achieves sentience, judges my Netflix choices, and occasionally orders pizza autonomously.
+          </p>
+
+          <p>
+            I exist at the intersection of enterprise reliability and bleeding-edge chaos. Whether debugging robotic consciousness at 3 AM 
+            or fine-tuning Stable Diffusion to generate the perfect meme, I believe the best solutions emerge from understanding 
+            both quantum-level details and galactic-scale architecture. This is the way.
+          </p>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--space-md); color: var(--text-primary);">
+            Arsenal of Digital Sorcery
+          </h3>
+          
+          <div class="tools-grid">
+            <div class="tool-tag">Unraid</div>
+            <div class="tool-tag">Docker Compose</div>
+            <div class="tool-tag">Stable Diffusion</div>
+            <div class="tool-tag">Local LLMs</div>
+            <div class="tool-tag">n8n Automation</div>
+            <div class="tool-tag">Grafana</div>
+            <div class="tool-tag">Unifi Controller</div>
+            <div class="tool-tag">Linux Systems</div>
+            <div class="tool-tag">Network Architecture</div>
+            <div class="tool-tag">Robotics Support</div>
+            <div class="tool-tag">Operations at Scale</div>
+            <div class="tool-tag">Open WebUI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact relative">
+    <div class="container relative z-10">
+      <h2 class="section-title gradient-text">Initialize Connection Protocol</h2>
+      
+      <p style="text-align: center; font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
+        Ready to discuss robotics domination, homelab supremacy, or the inevitable AI uprising? 
+        Let's establish a secure connection and geek out about the future!
+      </p>
+
+      <div class="contact-grid">
+        <a href="mailto:zachgonser@me.com" class="contact-card">
+          <svg class="contact-icon w-8 h-8 text-purple-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          <div class="contact-label">Neural Link</div>
+          <div class="contact-value">zachgonser@me.com</div>
+        </a>
+
+        <a href="tel:817-832-1601" class="contact-card">
+          <svg class="contact-icon w-8 h-8 text-cyan-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
+          <div class="contact-label">Voice Channel</div>
+          <div class="contact-value">817-832-1601</div>
+        </a>
+
+        <div class="contact-card">
+          <svg class="contact-icon w-8 h-8 text-emerald-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div class="contact-label">Base Station</div>
+          <div class="contact-value">Roanoke, TX</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; border-top: 1px solid var(--border-color); padding-top: var(--space-lg); color: var(--text-muted);">
+        <p>
+          © 2025 Zach Gonser. Built with Astro, React, and way too much caffeine.
+        </p>
+        <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">
+          Try the Konami code for a surprise! ↑↑↓↓←→←→BA
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Theme persistence and Konami code
+    document.addEventListener('DOMContentLoaded', function() {
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Konami Code Easter Egg - Metal Gear Solid Style
+      let konamiCode = [38,38,40,40,37,39,37,39,66,65]; // ↑↑↓↓←→←→BA
+      let konamiIndex = 0;
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.keyCode === konamiCode[konamiIndex]) {
+          konamiIndex++;
+          if (konamiIndex === konamiCode.length) {
+            // Metal Gear Solid Alert Effect
+            triggerMGSAlert();
+            konamiIndex = 0;
+          }
+        } else {
+          konamiIndex = 0;
+        }
+      });
+
+      function triggerMGSAlert() {
+        // Create alert sound effect (visual representation)
+        const alertOverlay = document.createElement('div');
+        alertOverlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(255, 0, 0, 0.3);
+          z-index: 10000;
+          animation: alertFlash 0.5s ease-in-out 6;
+          pointer-events: none;
+        `;
+        document.body.appendChild(alertOverlay);
+
+        // Alert banner
+        const alertBanner = document.createElement('div');
+        alertBanner.style.cssText = `
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(45deg, #ff0000, #cc0000);
+          color: white;
+          padding: 20px 40px;
+          border: 3px solid #ffffff;
+          border-radius: 10px;
+          font-family: 'Space Grotesk', monospace;
+          font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+          z-index: 10001;
+          box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
+          animation: alertPulse 1s ease-in-out infinite;
+        `;
+        alertBanner.innerHTML = '⚠️ ALERT! INFILTRATOR DETECTED! ⚠️';
+        document.body.appendChild(alertBanner);
+
+        // Stealth Camo Effect - make website "invisible"
+        setTimeout(() => {
+          document.body.style.filter = 'opacity(0.1) blur(2px)';
+          document.body.style.transition = 'filter 2s ease-in-out';
+          
+          // Show Kojima-style codec message
+          const codecMessage = document.createElement('div');
+          codecMessage.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border: 3px solid #0f3460;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            z-index: 10002;
+            font-family: 'Space Grotesk', monospace;
+            color: #00ff41;
+            box-shadow: 0 0 50px rgba(15, 52, 96, 0.8);
+            animation: codecAppear 1s ease-out;
+          `;
+          
+          codecMessage.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <div style="width: 60px; height: 60px; background: #0f3460; border: 2px solid #00ff41; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px;">
+                🎮
+              </div>
+              <div>
+                <div style="color: #00ff41; font-size: 14px; margin-bottom: 5px;">CODEC TRANSMISSION</div>
+                <div style="color: #ffffff; font-size: 18px; font-weight: bold;">KOJIMA PRODUCTIONS</div>
+              </div>
+            </div>
+            
+            <div style="border-top: 1px solid #0f3460; padding-top: 20px; line-height: 1.6;">
+              <p style="margin: 0 0 15px 0; color: #ffffff;">
+                <strong style="color: #00ff41;">Colonel:</strong> Snake, you've activated the homelab's stealth camouflage system. 
+                This level of infrastructure automation is unprecedented...
+              </p>
+              
+              <p style="margin: 0 0 15px 0; color: #ffffff;">
+                <strong style="color: #ffaa00;">Snake:</strong> Colonel, these Docker containers... they're everywhere. 
+                It's like they're multiplying on their own. Is this the work of the Patriots?
+              </p>
+              
+              <p style="margin: 0 0 20px 0; color: #ffffff;">
+                <strong style="color: #00ff41;">Colonel:</strong> No Snake, this is something far more sophisticated. 
+                A homelab so advanced it transcends the digital divide. You're looking at the future of self-hosted excellence.
+              </p>
+              
+              <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #0f3460;">
+                <div style="color: #00ff41; font-size: 12px; font-style: italic;">
+                  "A homelab to surpass Metal Gear..." - Hideo Kojima (probably)
+                </div>
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(codecMessage);
+          
+          // Auto-close after 8 seconds
+          setTimeout(() => {
+            document.body.style.filter = '';
+            document.body.style.transition = '';
+            if (document.body.contains(alertOverlay)) document.body.removeChild(alertOverlay);
+            if (document.body.contains(alertBanner)) document.body.removeChild(alertBanner);
+            if (document.body.contains(codecMessage)) document.body.removeChild(codecMessage);
+          }, 8000);
+          
+        }, 2000); // Show codec message after 2 seconds
+      }
+
+      // Add Metal Gear Solid animation keyframes
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes alertFlash {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes alertPulse {
+          0%, 100% { transform: translateX(-50%) scale(1); }
+          50% { transform: translateX(-50%) scale(1.05); }
+        }
+        
+        @keyframes codecAppear {
+          0% { 
+            opacity: 0; 
+            transform: translate(-50%, -50%) scale(0.8);
+            filter: blur(10px);
+          }
+          100% { 
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1);
+            filter: blur(0px);
+          }
+        }
+        
+        @keyframes matrix-rain {
+          0% { filter: hue-rotate(0deg) brightness(1); }
+          50% { filter: hue-rotate(90deg) brightness(1.5); }
+          100% { filter: hue-rotate(180deg) brightness(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+
+  <!-- Easter Egg Component -->
+  <EasterEgg client:load />
+</Layout>
