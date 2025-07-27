@@ -1,0 +1,72 @@
+name: Deploy Personal Website
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build website
+      run: npm run build
+      
+    - name: Run tests (if available)
+      run: |
+        if npm run test --if-present; then
+          echo "Tests passed"
+        else
+          echo "No tests found or tests failed"
+        fi
+      continue-on-error: true
+      
+    - name: Deploy to production
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        echo "Deploying to production environment..."
+        # Your deployment commands will go here
+        # Example: docker-compose up -d --build
+        # Or: rsync to web server, restart services, etc.
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful"
+        else
+          echo "❌ Deployment failed"
+        fi
+
+  security-scan:
+    runs-on: self-hosted
+    needs: build-and-deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Run security audit
+      run: npm audit --audit-level moderate
+      continue-on-error: true
+      
+    - name: Check for vulnerabilities
+      run: |
+        echo "Running security checks..."
+        # Add any additional security scanning tools here

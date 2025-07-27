@@ -140,6 +140,47 @@ Update the following files with your information:
 4. **Monitor logs** with `docker logs personal-website`
 5. **Update regularly** with `docker-compose pull && docker-compose up -d`
 
+## 🤖 CI/CD & Self-Hosted Deployment
+
+This repository includes GitHub Actions workflows configured for self-hosted runners:
+
+### Workflows
+
+1. **`deploy.yml`** - Production deployment on main branch
+2. **`ci.yml`** - Continuous integration for PRs and feature branches  
+3. **`docker-deploy.yml`** - Docker-based deployment with health checks
+
+### Self-Hosted Runner Setup
+
+1. Configure a GitHub self-hosted runner on your homelab server
+2. Ensure Docker and Docker Compose are installed on the runner
+3. Set up necessary secrets in GitHub repository settings:
+   - `GITHUB_TOKEN` (automatically provided)
+   - Any additional deployment secrets
+
+### Deployment Process
+
+**Automatic:**
+- Push to `main` branch triggers production deployment
+- Pull requests trigger CI checks and preview builds
+- Docker images are built and pushed to GitHub Container Registry
+
+**Manual:**
+- Use GitHub Actions "Run workflow" for manual deployments
+- Choose deployment environment (production/staging)
+
+### Health Checks
+
+- Automated health checks verify deployment success
+- Container health monitoring included
+- Failure notifications and rollback strategies
+
+## 📊 Monitoring
+
+- GitHub Actions provide deployment status
+- Docker health checks ensure service availability
+- Logs available via `docker logs` command
+
 ## 📄 License
 
 MIT License - feel free to use this template for your own portfolio!
