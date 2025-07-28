@@ -7,3 +7,5 @@ services:
       - "18475:8080"  # Unique external port for Nginx Proxy Manager
     environment:
       - NODE_ENV=production
+    network_mode: bridge
+

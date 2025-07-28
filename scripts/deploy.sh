@@ -13,6 +13,13 @@ CONTAINER_NAME="personal-website"
 IMAGE_NAME="personal-website:latest"
 BACKUP_DIR="/deploy-target/backups"
 
+# Detect docker compose command (v1 or v2)
+if command -v docker-compose >/dev/null 2>&1; then
+    COMPOSE_CMD="docker-compose"
+else
+    COMPOSE_CMD="docker compose"
+fi
+
 # Create necessary directories
 mkdir -p "${DEPLOY_TARGET}/dist"
 mkdir -p "${BACKUP_DIR}"
@@ -68,11 +75,11 @@ docker rm -f "${CONTAINER_NAME}" || true
 
 # Stop any running docker-compose services
 echo "🛑 Stopping existing docker-compose services..."
-docker-compose down --timeout 30 || true
+$COMPOSE_CMD down --timeout 30 || true
 
 # Build and start the new container
 echo "🏗️ Building and starting container..."
-docker-compose up -d --build
+$COMPOSE_CMD up -d --build
 
 # Wait for container to be ready
 echo "⏳ Waiting for container to be ready..."
@@ -90,9 +97,15 @@ ATTEMPT=1
 
 # Test basic connectivity first
 echo "🔍 Testing basic connectivity to port 18475..."
-if ! nc -z localhost 18475 2>/dev/null; then
-    echo "❌ Port 18475 is not responding - container may not be running properly"
-    docker logs personal-website --tail 20 || echo "Could not get container logs"
+if command -v nc >/dev/null 2>&1; then
+    if ! nc -z localhost 18475 2>/dev/null; then
+        echo "❌ Port 18475 is not responding - container may not be running properly"
+        docker logs personal-website --tail 20 || echo "Could not get container logs"
+    else
+        echo "✅ Port 18475 is open"
+    fi
+else
+    echo "⚠️ nc command not available, skipping port check"
 fi
 
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
@@ -129,7 +142,7 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
                 echo "📥 Rolling back to: ${LATEST_BACKUP}"
                 rm -rf "${DEPLOY_TARGET}/dist"/*
                 cp -r "${BACKUP_DIR}/${LATEST_BACKUP}"/* "${DEPLOY_TARGET}/dist/"
-                docker-compose up -d --build
+                $COMPOSE_CMD up -d --build
                 echo "🔄 Rollback completed"
             fi
         fi
