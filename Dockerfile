@@ -4,13 +4,13 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies (including dev dependencies for build)
-RUN npm ci
+RUN npm ci --prefer-offline --no-audit
 
-# Copy source code
+# Copy source code (this changes frequently so goes last)
 COPY . .
 
 # Build the application

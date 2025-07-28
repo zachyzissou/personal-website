@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 .git
+.github
 .gitignore
 README.md
 .env
@@ -14,3 +15,7 @@ README.md
 *.log
 dist
 build
+coverage
+.nyc_output
+.vscode
+personal-website.code-workspace

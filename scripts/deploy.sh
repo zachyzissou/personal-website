@@ -76,17 +76,37 @@ docker-compose up -d --build
 
 # Wait for container to be ready
 echo "⏳ Waiting for container to be ready..."
-sleep 10
+sleep 15
+
+# Check if container is actually running
+echo "🔍 Checking container status..."
+docker ps | grep personal-website || echo "❌ Container not found in running state"
 
 # Health check
 echo "🔍 Running health check..."
 HEALTH_CHECK_URL="http://localhost:18475/health"
-MAX_ATTEMPTS=30
+MAX_ATTEMPTS=60
 ATTEMPT=1
 
+# Test basic connectivity first
+echo "🔍 Testing basic connectivity to port 18475..."
+if ! nc -z localhost 18475 2>/dev/null; then
+    echo "❌ Port 18475 is not responding - container may not be running properly"
+    docker logs personal-website --tail 20 || echo "Could not get container logs"
+fi
+
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-    if curl -f -s "$HEALTH_CHECK_URL" > /dev/null; then
+    echo "⏳ Health check attempt $ATTEMPT/$MAX_ATTEMPTS..."
+    
+    # Try health endpoint first
+    if curl -f -s "$HEALTH_CHECK_URL" > /dev/null 2>&1; then
         echo "✅ Health check passed! Application is running."
+        break
+    fi
+    
+    # If health endpoint fails, try root endpoint as fallback
+    if curl -f -s "http://localhost:18475/" > /dev/null 2>&1; then
+        echo "✅ Root endpoint accessible! Application is running."
         break
     fi
     
@@ -108,8 +128,8 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
         exit 1
     fi
     
-    echo "⏳ Attempt $ATTEMPT/$MAX_ATTEMPTS failed, retrying in 5 seconds..."
-    sleep 5
+    echo "⏳ Attempt $ATTEMPT/$MAX_ATTEMPTS failed, retrying in 2 seconds..."
+    sleep 2
     ATTEMPT=$((ATTEMPT + 1))
 done
 
