@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   personal-website:
     build: .
@@ -7,9 +9,10 @@ services:
       - "18475:8080"  # Unique external port for Nginx Proxy Manager
     environment:
       - NODE_ENV=production
-    # Remove network_mode: bridge to allow Docker Compose to create its own network
+    networks:
+      - personal-website-net
 
 networks:
-  default:
-    name: personal-website_default
+  personal-website-net:
+    driver: bridge
 
