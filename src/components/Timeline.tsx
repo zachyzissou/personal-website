@@ -21,6 +21,14 @@ const timelineData: TimelineItem[] = [
     icon: BeakerIcon
   },
   {
+    id: 'botrista-sales',
+    dates: 'Jan 2023 - Mar 2023',
+    title: 'Manager, Regional Sales Operations',
+    company: 'Botrista, Inc.',
+    summary: 'Led regional sales operations and partner onboarding initiatives. Streamlined sales processes and established operational frameworks for rapid market expansion.',
+    icon: BuildingOfficeIcon
+  },
+  {
     id: 'chowbotics',
     dates: 'Mar 2018 - Oct 2022',
     title: 'Product Support Manager',

@@ -202,28 +202,32 @@ export default function ContainerShowcase() {
             </div>
 
             <div 
-              className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                expandedCategories.has(category.id) ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className="overflow-hidden transition-all duration-300 ease-in-out"
+              style={{
+                maxHeight: expandedCategories.has(category.id) ? '1000px' : '0px',
+                opacity: expandedCategories.has(category.id) ? 1 : 0
+              }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 mt-4 border-t border-slate-700/50">
-                {expandedCategories.has(category.id) && category.containers.map((container, index) => (
-                  <div
-                    key={`${category.id}-${container.name}`}
-                    className="p-2 rounded-lg transition-colors hover:bg-slate-700/30"
-                    style={{
-                      animationDelay: `${index * 20}ms`
-                    }}
-                  >
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <span className="font-semibold text-slate-200 text-sm block">{container.name}</span>
-                        <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
+              <div className="border-t border-slate-700/50 mt-4 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {category.containers.map((container, index) => (
+                    <div
+                      key={`${category.id}-${container.name}-${index}`}
+                      className="p-2 rounded-lg transition-all duration-200 hover:bg-slate-700/30"
+                      style={{
+                        transitionDelay: expandedCategories.has(category.id) ? `${index * 50}ms` : '0ms'
+                      }}
+                    >
+                      <div className="flex items-start gap-2">
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                          <span className="font-semibold text-slate-200 text-sm block">{container.name}</span>
+                          <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>

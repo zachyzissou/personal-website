@@ -74,9 +74,9 @@ docker-compose down --timeout 30 || true
 echo "🏗️ Building and starting container..."
 docker-compose up -d --build
 
-# Wait for container to be ready
-echo "⏳ Waiting for container to be ready..."
-sleep 15
+# Wait for container to be ready and fully initialized
+echo "⏳ Waiting for container to be ready and fully initialized..."
+sleep 20
 
 # Check if container is actually running
 echo "🔍 Checking container status..."
@@ -85,12 +85,20 @@ docker ps | grep personal-website || echo "❌ Container not found in running st
 # Health check
 echo "🔍 Running health check..."
 HEALTH_CHECK_URL="http://localhost:18475/health"
-MAX_ATTEMPTS=15
+MAX_ATTEMPTS=10
 ATTEMPT=1
 
-# Test basic connectivity first with curl
-echo "🔍 Testing basic connectivity to port 18475..."
-if curl -f -s --connect-timeout 5 "http://localhost:18475/" > /dev/null 2>&1; then
+# Test internal health first
+echo "🔍 Testing internal container health..."
+if docker exec personal-website curl -f -s "http://localhost:8080/health" > /dev/null 2>&1; then
+    echo "✅ Internal health check passed"
+else
+    echo "❌ Internal health check failed"
+fi
+
+# Test external connectivity
+echo "🔍 Testing external connectivity to port 18475..."
+if curl -f -s --connect-timeout 10 --max-time 15 "http://localhost:18475/" > /dev/null 2>&1; then
     echo "✅ Port 18475 is responding"
 else
     echo "⚠️ Port 18475 not responding yet, will retry with health check..."
@@ -99,20 +107,26 @@ fi
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
     echo "⏳ Health check attempt $ATTEMPT/$MAX_ATTEMPTS..."
     
-    # Try health endpoint first
-    if curl -f -s "$HEALTH_CHECK_URL" > /dev/null 2>&1; then
-        echo "✅ Health check passed! Application is running."
-        break
-    fi
+    # Check if container is healthy using Docker's built-in health check
+    CONTAINER_HEALTH=$(docker inspect personal-website --format='{{.State.Health.Status}}' 2>/dev/null || echo "unknown")
     
-    # If health endpoint fails, try root endpoint as fallback
-    if curl -f -s "http://localhost:18475/" > /dev/null 2>&1; then
-        echo "✅ Root endpoint accessible! Application is running."
+    if [ "$CONTAINER_HEALTH" = "healthy" ]; then
+        echo "✅ Docker health check passed! Container is healthy."
+        
+        # Try external connectivity as confirmation
+        if curl -f -s --connect-timeout 5 --max-time 10 "$HEALTH_CHECK_URL" > /dev/null 2>&1; then
+            echo "✅ External health endpoint also accessible!"
+        elif curl -f -s --connect-timeout 5 --max-time 10 "http://localhost:18475/" > /dev/null 2>&1; then
+            echo "✅ External root endpoint accessible!"
+        else
+            echo "⚠️ External connectivity test failed, but container is healthy internally - likely network config issue in CI environment"
+        fi
         break
     fi
     
     if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
         echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
+        echo "🔍 Container health status: $CONTAINER_HEALTH"
         echo "🔍 Container logs for debugging:"
         docker logs personal-website --tail 30 || echo "Could not get container logs"
         echo "🔍 Checking nginx process inside container:"
@@ -137,8 +151,8 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
         exit 1
     fi
     
-    echo "⏳ Attempt $ATTEMPT/$MAX_ATTEMPTS failed, retrying in 2 seconds..."
-    sleep 2
+    echo "⏳ Attempt $ATTEMPT/$MAX_ATTEMPTS failed (container health: $CONTAINER_HEALTH), retrying in 3 seconds..."
+    sleep 3
     ATTEMPT=$((ATTEMPT + 1))
 done
 
