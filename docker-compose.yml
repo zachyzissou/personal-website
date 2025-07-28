@@ -4,6 +4,6 @@ services:
     container_name: personal-website
     restart: unless-stopped
     ports:
-      - "18475:80"  # Unique external port for Nginx Proxy Manager
+      - "18475:8080"  # Unique external port for Nginx Proxy Manager
     environment:
       - NODE_ENV=production

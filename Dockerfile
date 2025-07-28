@@ -33,17 +33,19 @@ RUN addgroup -g 1001 -S nodejs && \
 RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
     chown -R nextjs:nodejs /var/cache/nginx && \
     chown -R nextjs:nodejs /var/log/nginx && \
-    chown -R nextjs:nodejs /etc/nginx/conf.d
+    chown -R nextjs:nodejs /etc/nginx/conf.d && \
+    chown -R nextjs:nodejs /var/run
 
 # Switch to non-root user
 USER nextjs
 
-# Expose port 80
+# Expose port 8080 (non-privileged port)
+EXPOSE 8080
 EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
