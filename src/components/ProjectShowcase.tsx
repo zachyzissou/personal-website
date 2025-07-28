@@ -143,7 +143,7 @@ function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Detailed Description */}
           <div className="flex-shrink-0">
-            <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
+            <p className="text-slate-200 text-xs sm:text-sm leading-relaxed text-left">
               {project.detailedDescription}
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function ProjectShowcase() {
       className="section relative" 
       style={{ 
         background: 'var(--bg-projects)',
-        padding: 'var(--space-4xl) var(--space-md)'
+        padding: 'var(--space-4xl) var(--space-sm)'
       }}
     >
       <div 
@@ -224,7 +224,7 @@ export default function ProjectShowcase() {
         style={{
           maxWidth: 'var(--max-width-content)',
           margin: '0 auto',
-          padding: '0 var(--space-md)'
+          padding: '0 var(--space-sm)'
         }}
       >
         <motion.div
@@ -292,8 +292,8 @@ export default function ProjectShowcase() {
                 key={project.id}
                 className="flex-shrink-0"
                 style={{ 
-                  width: 'calc(100vw - 4rem)',
-                  maxWidth: '480px',
+                  width: 'calc(100vw - 6rem)',
+                  maxWidth: '400px',
                   transform: `scale(${index === currentIndex ? 1 : 0.9})`,
                   opacity: index === currentIndex ? 1 : 0.6
                 }}

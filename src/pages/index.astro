@@ -870,11 +870,19 @@ import AnimatedStats from '../components/AnimatedStats';
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        /* Disable all animations on mobile */
+        animation: none !important;
       }
       
-      /* Hide shimmer effect on mobile to prevent rendering issues */
-      .gradient-text::before {
-        display: none;
+      /* Hide ALL shimmer and pseudo-element effects on mobile */
+      .gradient-text::before,
+      .stats-grid::before,
+      .service-card::before,
+      .contact-card::before,
+      .btn-primary::before,
+      .btn-secondary::before {
+        display: none !important;
+        visibility: hidden !important;
       }
 
       /* Project Cards Mobile - Single Column */
