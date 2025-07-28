@@ -7,5 +7,9 @@ services:
       - "18475:8080"  # Unique external port for Nginx Proxy Manager
     environment:
       - NODE_ENV=production
-    network_mode: bridge
+    # Remove network_mode: bridge to allow Docker Compose to create its own network
+
+networks:
+  default:
+    name: personal-website_default
 
