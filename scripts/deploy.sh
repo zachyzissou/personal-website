@@ -90,9 +90,15 @@ ATTEMPT=1
 
 # Test basic connectivity first
 echo "🔍 Testing basic connectivity to port 18475..."
-if ! nc -z localhost 18475 2>/dev/null; then
-    echo "❌ Port 18475 is not responding - container may not be running properly"
-    docker logs personal-website --tail 20 || echo "Could not get container logs"
+if command -v nc >/dev/null 2>&1; then
+    if ! nc -z localhost 18475 2>/dev/null; then
+        echo "❌ Port 18475 is not responding - container may not be running properly"
+        docker logs personal-website --tail 20 || echo "Could not get container logs"
+    else
+        echo "✅ Port 18475 is open"
+    fi
+else
+    echo "⚠️ nc command not available, skipping port check"
 fi
 
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
