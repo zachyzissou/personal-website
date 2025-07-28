@@ -10,7 +10,7 @@ import {
 interface StatItem {
   id: string;
   value: string;
-  numericValue?: number;
+  numericValue?: number | null;
   label: string;
   suffix?: string;
   prefix?: string;
@@ -180,7 +180,7 @@ function StatCard({ stat, index }: StatCardProps) {
         
         {/* Number */}
         <div style={{ marginBottom: 'var(--space-xs)' }}>
-          {stat.numericValue !== null ? (
+          {stat.numericValue !== null && stat.numericValue !== undefined ? (
             <AnimatedCounter
               from={0}
               to={stat.numericValue}

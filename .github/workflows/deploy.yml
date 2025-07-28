@@ -25,7 +25,21 @@ jobs:
       run: npm ci
       
     - name: Build website
-      run: npm run build
+      run: |
+        echo "🏗️ Building website..."
+        npm run build
+        echo "✅ Build completed, checking dist directory..."
+        ls -la dist/ || echo "❌ dist directory not found"
+        
+    - name: Show build logs on failure
+      if: failure()
+      run: |
+        echo "🔍 Checking for build artifacts..."
+        ls -la ./ || true
+        echo "📋 Showing recent logs..."
+        cat npm-debug.log 2>/dev/null || echo "No npm-debug.log found"
+        echo "🗂️ Checking astro logs..."
+        find . -name "*.log" -type f -exec echo "=== {} ===" \; -exec cat {} \; || true
       
     - name: Run tests (if available)
       run: |
