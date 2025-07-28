@@ -79,7 +79,7 @@ jobs:
         sleep 10
         
         # Basic health check (using your unique port)
-        if curl -f http://localhost:18475 > /dev/null 2>&1; then
+        if curl -f http://localhost:18475/health > /dev/null 2>&1; then
           echo "✅ Application is healthy"
         else
           echo "❌ Health check failed"
