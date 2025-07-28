@@ -29,17 +29,6 @@ RUN apk add --no-cache curl
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
-
-# Change ownership of nginx files and temp directory
-RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
-    chown -R nextjs:nodejs /var/cache/nginx && \
-    chown -R nextjs:nodejs /var/log/nginx && \
-    chown -R nextjs:nodejs /etc/nginx/conf.d && \
-    chown -R nextjs:nodejs /tmp
-
 
 # Expose port 8080 (non-privileged port)
 EXPOSE 8080
