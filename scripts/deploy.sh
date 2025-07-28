@@ -28,9 +28,8 @@ if [ -d "${DEPLOY_TARGET}/dist" ] && [ "$(ls -A ${DEPLOY_TARGET}/dist)" ]; then
     cp -r "${DEPLOY_TARGET}/dist"/* "${BACKUP_DIR}/${BACKUP_NAME}/"
     echo "✅ Backup created: ${BACKUP_DIR}/${BACKUP_NAME}"
     
-    # Keep only last 5 backups
-    cd "${BACKUP_DIR}"
-    ls -t | tail -n +6 | xargs -r rm -rf
+    # Keep only last 5 backups (but don't change working directory)
+    (cd "${BACKUP_DIR}" && ls -t | tail -n +6 | xargs -r rm -rf)
 fi
 
 # Copy source files and configs to deployment target
