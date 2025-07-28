@@ -21,7 +21,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: self-hosted
+    runs-on: [self-hosted, LinuxX64, personal-website]
     permissions:
       contents: read
       packages: write
@@ -58,7 +58,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, LinuxX64, personal-website]
     needs: build-and-push
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
@@ -68,18 +68,9 @@ jobs:
       
     - name: Deploy with Docker Compose
       run: |
-        echo "🚀 Deploying to production..."
-        
-        # Pull latest images
-        docker-compose pull
-        
-        # Deploy with zero-downtime strategy
-        docker-compose up -d --remove-orphans
-        
-        # Clean up old images
-        docker image prune -f
-        
-        echo "✅ Deployment completed successfully"
+        echo "🚀 Deploying to Unraid production..."
+        chmod +x ./scripts/deploy.sh
+        ./scripts/deploy.sh
         
     - name: Health check
       run: |

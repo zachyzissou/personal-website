@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, LinuxX64, personal-website]
     
     steps:
     - name: Checkout repository
@@ -39,10 +39,9 @@ jobs:
     - name: Deploy to production
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
-        echo "Deploying to production environment..."
-        # Your deployment commands will go here
-        # Example: docker-compose up -d --build
-        # Or: rsync to web server, restart services, etc.
+        echo "🚀 Deploying to Unraid production environment..."
+        chmod +x ./scripts/deploy.sh
+        ./scripts/deploy.sh
         
     - name: Notify deployment status
       if: always()
@@ -54,7 +53,7 @@ jobs:
         fi
 
   security-scan:
-    runs-on: self-hosted
+    runs-on: [self-hosted, LinuxX64, personal-website]
     needs: build-and-deploy
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
