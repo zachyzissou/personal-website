@@ -23,6 +23,9 @@ FROM nginx:alpine
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Install curl for debugging
+RUN apk add --no-cache curl
+
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 

@@ -114,6 +114,12 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
         echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
         echo "🔍 Container logs for debugging:"
         docker logs personal-website --tail 30 || echo "Could not get container logs"
+        echo "🔍 Checking nginx process inside container:"
+        docker exec personal-website ps aux | grep nginx || echo "Could not check nginx process"
+        echo "🔍 Testing internal nginx connection:"
+        docker exec personal-website curl -f http://localhost:8080/health || echo "Internal nginx connection failed"
+        echo "🔍 Checking nginx config:"
+        docker exec personal-website nginx -t || echo "Nginx config test failed"
         echo "🔄 Rolling back to previous version..."
         
         # Rollback logic
