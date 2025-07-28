@@ -40,8 +40,6 @@ RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
     chown -R nextjs:nodejs /etc/nginx/conf.d && \
     chown -R nextjs:nodejs /tmp
 
-# Switch to non-root user
-USER nextjs
 
 # Expose port 8080 (non-privileged port)
 EXPOSE 8080
