@@ -33,12 +33,25 @@ if [ -d "${DEPLOY_TARGET}/dist" ] && [ "$(ls -A ${DEPLOY_TARGET}/dist)" ]; then
     ls -t | tail -n +6 | xargs -r rm -rf
 fi
 
-# Copy built files to deployment target
-echo "📦 Copying built files to deployment target..."
-cp -r ./dist/* "${DEPLOY_TARGET}/dist/"
-cp docker-compose.yml "${DEPLOY_TARGET}/"
-cp Dockerfile "${DEPLOY_TARGET}/"
-cp nginx.conf "${DEPLOY_TARGET}/"
+# Copy source files and configs to deployment target
+echo "📦 Copying source files to deployment target..."
+echo "🔍 Current working directory: $(pwd)"
+
+# Copy entire project to deployment target (Docker will handle the build)
+echo "📂 Copying project files..."
+# Use rsync if available, otherwise fall back to cp
+if command -v rsync >/dev/null 2>&1; then
+    rsync -av --exclude=node_modules --exclude=.git --exclude=.github . "${DEPLOY_TARGET}/"
+else
+    # Create target directory structure
+    mkdir -p "${DEPLOY_TARGET}"
+    # Copy files excluding certain directories
+    find . -type f -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./.github/*" -exec cp --parents {} "${DEPLOY_TARGET}/" \;
+    # Copy directories (except excluded ones)
+    find . -type d -not -path "./node_modules*" -not -path "./.git*" -not -path "./.github*" -exec mkdir -p "${DEPLOY_TARGET}/{}" \;
+fi
+
+echo "✅ Files copied to deployment target"
 
 # Update docker-compose for production
 echo "🔧 Configuring for production deployment..."

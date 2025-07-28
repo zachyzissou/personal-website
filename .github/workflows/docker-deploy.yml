@@ -66,30 +66,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Build site
-      run: |
-        echo "📦 Installing dependencies..."
-        npm ci
-        echo "🏗️ Building website..."
-        npm run build
-        echo "✅ Build completed, checking dist directory..."
-        ls -la dist/ || echo "❌ dist directory not found"
-        
-    - name: Show build logs on failure
-      if: failure()
-      run: |
-        echo "🔍 Checking for build artifacts..."
-        ls -la ./ || true
-        echo "📋 Showing recent logs..."
-        cat npm-debug.log 2>/dev/null || echo "No npm-debug.log found"
-        echo "🗂️ Checking astro logs..."
-        find . -name "*.log" -type f -exec echo "=== {} ===" \; -exec cat {} \; || true
       
     - name: Deploy with Docker Compose
       run: |
