@@ -199,8 +199,11 @@ import AnimatedStats from '../components/AnimatedStats';
       text-decoration: none;
       transition: all 0.3s ease;
       border: 2px solid transparent;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
       position: relative;
+      min-height: 48px;
     }
 
     .btn:focus-visible {
@@ -859,6 +862,20 @@ import AnimatedStats from '../components/AnimatedStats';
         margin-bottom: var(--space-lg);
       }
 
+      /* Fix gradient text on mobile */
+      .gradient-text {
+        -webkit-text-fill-color: unset;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Hide shimmer effect on mobile to prevent rendering issues */
+      .gradient-text::before {
+        display: none;
+      }
+
       /* Project Cards Mobile - Single Column */
       .projects-showcase .grid {
         grid-template-columns: 1fr;
@@ -886,17 +903,23 @@ import AnimatedStats from '../components/AnimatedStats';
       }
       
       .stat-number {
-        font-size: var(--text-3xl);
+        font-size: var(--text-xl);
       }
       
       .stat-label {
-        font-size: var(--text-xs);
-        line-height: 1.3;
+        font-size: 0.625rem;
+        line-height: 1.2;
       }
 
       .hero-subtitle {
         flex-direction: column;
         gap: var(--space-xs);
+        font-size: var(--text-sm);
+      }
+
+      .hero-description {
+        font-size: var(--text-base);
+        padding: 0 var(--space-sm);
       }
 
       .service-card {
@@ -909,6 +932,28 @@ import AnimatedStats from '../components/AnimatedStats';
 
       .tools-grid {
         grid-template-columns: 1fr;
+      }
+
+      /* Reduce section padding on very small screens */
+      .section {
+        padding: var(--space-lg) var(--space-xs);
+      }
+
+      /* Smaller touch targets for very small screens */
+      .btn {
+        min-height: 44px;
+        padding: var(--space-xs) var(--space-md);
+        font-size: var(--text-base);
+      }
+      
+      /* Adjust gradient text size */
+      h1.gradient-text {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+      
+      /* Contact cards smaller on mobile */
+      .contact-card {
+        padding: var(--space-sm);
       }
     }
   </style>
@@ -941,13 +986,13 @@ import AnimatedStats from '../components/AnimatedStats';
         I'm a hands‑on technologist with a passion for automation and AI. Ex‑DoorDash and ex‑Apple, I now scale beverage robots at Botrista while building and maintaining a self‑hosted infrastructure that would make any systems architect proud.
       </p>
       <div class="hero-buttons">
-        <a href="#homelab" class="btn btn-primary flex items-center gap-2">
+        <a href="#homelab" class="btn btn-primary">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
           </svg>
           Explore the Digital Empire
         </a>
-        <a href="#journey" class="btn btn-secondary flex items-center gap-2">
+        <a href="#journey" class="btn btn-secondary">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>

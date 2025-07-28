@@ -121,18 +121,21 @@ function ProjectCard({ project }: ProjectCardProps) {
         {/* Content Layer */}
         <div 
           className="relative z-10 h-full flex flex-col"
-          style={{ padding: 'var(--space-md)', gap: 'var(--space-md)' }}
+          style={{ 
+            padding: 'clamp(1rem, 3vw, var(--space-md))',
+            gap: 'clamp(0.75rem, 2vw, var(--space-md))'
+          }}
         >
           {/* Header with Icon and Title */}
-          <div className="flex items-start gap-4 flex-shrink-0">
-            <div className={`w-14 h-14 bg-gradient-to-br ${project.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
-              <IconComponent className="w-7 h-7 text-white" aria-hidden="true" />
+          <div className="flex items-start gap-3 flex-shrink-0">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${project.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
+              <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300 mb-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300 mb-1 sm:mb-2">
                 {project.title}
               </h3>
-              <p className="text-slate-300 text-sm leading-relaxed group-hover:text-slate-200 transition-colors">
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed group-hover:text-slate-200 transition-colors">
                 {project.description}
               </p>
             </div>
@@ -140,21 +143,21 @@ function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Detailed Description */}
           <div className="flex-shrink-0">
-            <p className="text-slate-200 text-sm leading-relaxed">
+            <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
               {project.detailedDescription}
             </p>
           </div>
 
           {/* Key Highlights */}
           <div className="flex-1 min-h-0">
-            <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 sm:mb-3">
               Key Achievements
             </h4>
             <ul className="space-y-2">
               {project.highlights.map((highlight, index) => (
                 <li key={index} className="flex items-start gap-2 text-slate-300">
                   <ShieldCheckIcon className="w-3 h-3 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                  <span className="text-xs">{highlight}</span>
+                  <span className="text-xs leading-relaxed">{highlight}</span>
                 </li>
               ))}
             </ul>
@@ -162,7 +165,7 @@ function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Tech Stack */}
           <div className="flex-shrink-0 mt-auto">
-            <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 sm:mb-3">
               Technology Stack
             </h4>
             <div className="flex flex-wrap gap-1.5">
@@ -197,10 +200,13 @@ export default function ProjectShowcase() {
   };
 
   const handleDragEnd = (event: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x > threshold) {
+    const threshold = 30; // Lower threshold for more responsive swipes
+    const velocity = info.velocity.x;
+    
+    // Consider both offset and velocity for better swipe detection
+    if (info.offset.x > threshold || velocity > 500) {
       prevCard();
-    } else if (info.offset.x < -threshold) {
+    } else if (info.offset.x < -threshold || velocity < -500) {
       nextCard();
     }
   };
@@ -305,23 +311,23 @@ export default function ProjectShowcase() {
           <div className="flex justify-center items-center mt-6 gap-4">
             <button
               onClick={prevCard}
-              className="p-2 rounded-full bg-slate-700/50 hover:bg-slate-600/50 transition-colors"
+              className="p-3 rounded-full bg-slate-700/50 hover:bg-slate-600/50 active:bg-slate-500/50 transition-colors touch-manipulation"
               aria-label="Previous project"
             >
-              <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
             {/* Pagination Dots */}
-            <div className="flex gap-2">
+            <div className="flex gap-2.5 px-4">
               {projects.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 touch-manipulation ${
                     index === currentIndex 
-                      ? 'bg-purple-400' 
+                      ? 'bg-purple-400 w-8' 
                       : 'bg-slate-600 hover:bg-slate-500'
                   }`}
                   aria-label={`Go to project ${index + 1}`}
@@ -331,10 +337,10 @@ export default function ProjectShowcase() {
 
             <button
               onClick={nextCard}
-              className="p-2 rounded-full bg-slate-700/50 hover:bg-slate-600/50 transition-colors"
+              className="p-3 rounded-full bg-slate-700/50 hover:bg-slate-600/50 active:bg-slate-500/50 transition-colors touch-manipulation"
               aria-label="Next project"
             >
-              <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
