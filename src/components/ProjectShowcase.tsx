@@ -22,13 +22,12 @@ const projects: Project[] = [
   {
     id: 'ai-inference-cluster',
     title: 'AI Inference Cluster',
-    description: 'Multi-GPU cluster running Stable Diffusion, local LLMs, and custom fine-tuned models. Because why pay OpenAI when you can burn electricity at home?',
-    detailedDescription: 'A distributed computing powerhouse orchestrating a mix of enterprise-grade NVIDIA GPUs and consumer RTX cards across containerized environments. This neural network playground processes everything from artistic Stable Diffusion generations to complex language model inference, all while maintaining enterprise-grade reliability and scalability.',
-    techStack: ['Docker Swarm', 'NVIDIA GPUs', 'PyTorch', 'Open WebUI', 'Stable Diffusion', 'CUDA', 'Ollama'],
+    description: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs. It handles Stable Diffusion generation, custom LLMs and fine‑tuned models for domain‑specific tasks with enterprise‑grade reliability.',
+    detailedDescription: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs. It handles Stable Diffusion generation, custom LLMs and fine‑tuned models for domain‑specific tasks with enterprise‑grade reliability.',
+    techStack: ['Docker Swarm', 'Enterprise & Consumer NVIDIA GPUs', 'PyTorch', 'Open WebUI'],
     highlights: [
-      '40+ LLMs deployed simultaneously',
-      'Sub-2s image generation pipeline',
-      'Custom fine-tuned models for domain-specific tasks',
+      '40+ models deployed simultaneously',
+      'Sub‑2 second image generation pipeline',
       'Automated model deployment and scaling'
     ],
     icon: CpuChipIcon,
@@ -37,14 +36,14 @@ const projects: Project[] = [
   {
     id: 'automation-nexus',
     title: 'Automation Nexus',
-    description: 'Orchestrating 50+ containers with n8n workflows, monitoring everything with Grafana, and automating the automation of automations.',
-    detailedDescription: 'The central nervous system of my digital empire. This automation framework coordinates container orchestration, service monitoring, and intelligent workflow management. It\'s achieved such sophistication that it now automates its own optimization processes.',
-    techStack: ['n8n', 'Docker Compose', 'Grafana', 'Prometheus', 'Home Assistant', 'Redis', 'PostgreSQL'],
+    description: 'The central nervous system of my homelab. This framework coordinates container orchestration, service monitoring and intelligent workflow management with n8n. It automates updates, scaling and even its own optimizations.',
+    detailedDescription: 'The central nervous system of my homelab. This framework coordinates container orchestration, service monitoring and intelligent workflow management with n8n. It automates updates, scaling and even its own optimizations.',
+    techStack: ['n8n', 'Docker Compose', 'Grafana', 'Prometheus', 'Home Assistant'],
     highlights: [
       '200+ automated workflows active',
-      '99.97% infrastructure uptime',
-      'Self-healing container recovery',
-      'Predictive scaling based on usage patterns'
+      '99.9% infrastructure uptime',
+      'Self‑healing container recovery',
+      'Predictive scaling'
     ],
     icon: BoltIcon,
     gradient: 'from-cyan-500 to-blue-500'
@@ -52,14 +51,14 @@ const projects: Project[] = [
   {
     id: 'network-fortress',
     title: 'Network Fortress',
-    description: 'Enterprise-grade network with Unifi gear, multiple VLANs, reverse proxy magic, and bulletproof ad blocking with Pi-hole and AdGuard.',
-    detailedDescription: 'A robust network architecture that would make enterprise teams jealous. Segmented VLANs, intelligent traffic routing through Nginx Proxy Manager, and comprehensive ad blocking with Pi-hole and AdGuard create a fast, secure digital fortress while maintaining seamless user experience.',
-    techStack: ['Unifi Controller', 'Nginx Proxy Manager', 'Pi-hole', 'AdGuard', 'Wireguard', 'Cloudflare Tunnel', 'Let\'s Encrypt'],
+    description: 'A zero‑trust network built with Unifi gear, segmented VLANs, reverse proxy routing via Nginx Proxy Manager, Pi‑hole and AdGuard for DNS filtering, and automated threat detection. It maintains seamless user experience while keeping attacks at bay.',
+    detailedDescription: 'A zero‑trust network built with Unifi gear, segmented VLANs, reverse proxy routing via Nginx Proxy Manager, Pi‑hole and AdGuard for DNS filtering, and automated threat detection. It maintains seamless user experience while keeping attacks at bay.',
+    techStack: ['Unifi Controller', 'Nginx Proxy Manager', 'Pi‑hole', 'AdGuard'],
     highlights: [
-      '4 isolated network segments',
-      'Sub-10ms internal routing latency',
-      '99%+ ad blocking effectiveness',
-      'Zero-downtime reverse proxy management'
+      '4 isolated VLANs',
+      'Sub‑10 ms internal routing latency',
+      '99.8% threat detection accuracy',
+      'Zero security incidents in 2+ years'
     ],
     icon: ServerIcon,
     gradient: 'from-emerald-500 to-teal-500'
@@ -249,7 +248,7 @@ export default function ProjectShowcase() {
               marginBottom: 'var(--space-2xl)'
             }}
           >
-            Where bleeding-edge tech meets caffeinated obsession. These are the crown jewels of my digital empire.
+            Where bleeding‑edge tech meets caffeinated obsession. These are the crown jewels of my digital empire.
           </p>
         </motion.div>
 
