@@ -29,12 +29,12 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nextjs -u 1001
 
-# Change ownership of nginx files
+# Change ownership of nginx files and temp directory
 RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
     chown -R nextjs:nodejs /var/cache/nginx && \
     chown -R nextjs:nodejs /var/log/nginx && \
     chown -R nextjs:nodejs /etc/nginx/conf.d && \
-    chown -R nextjs:nodejs /var/run
+    chown -R nextjs:nodejs /tmp
 
 # Switch to non-root user
 USER nextjs
