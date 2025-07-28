@@ -135,7 +135,7 @@ function ProjectCard({ project }: ProjectCardProps) {
               <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300 mb-1 sm:mb-2">
                 {project.title}
               </h3>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed group-hover:text-slate-200 transition-colors">
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed group-hover:text-slate-200 transition-colors text-left">
                 {project.description}
               </p>
             </div>
@@ -293,10 +293,13 @@ export default function ProjectShowcase() {
                 className="flex-shrink-0"
                 style={{ 
                   width: 'calc(100vw - 6rem)',
-                  maxWidth: '400px',
-                  transform: `scale(${index === currentIndex ? 1 : 0.9})`,
+                  maxWidth: '400px'
+                }}
+                animate={{
+                  scale: index === currentIndex ? 1 : 0.9,
                   opacity: index === currentIndex ? 1 : 0.6
                 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 variants={itemVariants}
                 initial="hidden"
                 whileInView="visible"

@@ -169,7 +169,11 @@ export default function ContainerShowcase() {
           >
             <div 
               className="category-header cursor-pointer"
-              onClick={() => toggleCategory(category.id)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleCategory(category.id);
+              }}
             >
               <div className="flex items-start gap-4">
                 <div className={`w-14 h-14 bg-gradient-to-br ${category.gradient} rounded-xl flex items-center justify-center flex-shrink-0`}>
@@ -197,23 +201,19 @@ export default function ContainerShowcase() {
               </div>
             </div>
 
-            <motion.div
-              initial={false}
-              animate={{
-                height: expandedCategories.has(category.id) ? 'auto' : 0,
-                opacity: expandedCategories.has(category.id) ? 1 : 0
-              }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
+            <div 
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                expandedCategories.has(category.id) ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+              }`}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 mt-4 border-t border-slate-700/50">
-                {category.containers.map((container, index) => (
-                  <motion.div
-                    key={container.name}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.02 }}
+                {expandedCategories.has(category.id) && category.containers.map((container, index) => (
+                  <div
+                    key={`${category.id}-${container.name}`}
                     className="p-2 rounded-lg transition-colors hover:bg-slate-700/30"
+                    style={{
+                      animationDelay: `${index * 20}ms`
+                    }}
                   >
                     <div className="flex items-start gap-2">
                       <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
@@ -222,10 +222,10 @@ export default function ContainerShowcase() {
                         <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         ))}
       </motion.div>

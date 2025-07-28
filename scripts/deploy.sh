@@ -88,17 +88,12 @@ HEALTH_CHECK_URL="http://localhost:18475/health"
 MAX_ATTEMPTS=15
 ATTEMPT=1
 
-# Test basic connectivity first
+# Test basic connectivity first with curl
 echo "🔍 Testing basic connectivity to port 18475..."
-if command -v nc >/dev/null 2>&1; then
-    if ! nc -z localhost 18475 2>/dev/null; then
-        echo "❌ Port 18475 is not responding - container may not be running properly"
-        docker logs personal-website --tail 20 || echo "Could not get container logs"
-    else
-        echo "✅ Port 18475 is open"
-    fi
+if curl -f -s --connect-timeout 5 "http://localhost:18475/" > /dev/null 2>&1; then
+    echo "✅ Port 18475 is responding"
 else
-    echo "⚠️ nc command not available, skipping port check"
+    echo "⚠️ Port 18475 not responding yet, will retry with health check..."
 fi
 
 while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
