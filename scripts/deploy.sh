@@ -39,6 +39,9 @@ echo "🔍 Current working directory: $(pwd)"
 
 # Copy entire project to deployment target (Docker will handle the build)
 echo "📂 Copying project files..."
+echo "🔍 Checking for package-lock.json in source:"
+ls -la package-lock.json || echo "❌ package-lock.json not found in source"
+
 # Use rsync if available, otherwise fall back to cp
 if command -v rsync >/dev/null 2>&1; then
     rsync -av --exclude=node_modules --exclude=.git --exclude=.github . "${DEPLOY_TARGET}/"
@@ -50,6 +53,9 @@ else
     # Copy directories (except excluded ones)
     find . -type d -not -path "./node_modules*" -not -path "./.git*" -not -path "./.github*" -exec mkdir -p "${DEPLOY_TARGET}/{}" \;
 fi
+
+echo "🔍 Verifying package-lock.json in deployment target:"
+ls -la "${DEPLOY_TARGET}/package-lock.json" || echo "❌ package-lock.json not found in deployment target"
 
 echo "✅ Files copied to deployment target"
 
