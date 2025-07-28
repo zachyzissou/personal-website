@@ -62,11 +62,13 @@ echo "✅ Files copied to deployment target"
 echo "🔧 Configuring for production deployment..."
 cd "${DEPLOY_TARGET}"
 
-# Check if container is running and stop it gracefully
-if docker ps -q -f name="${CONTAINER_NAME}" | grep -q .; then
-    echo "🛑 Stopping existing container..."
-    docker-compose down --timeout 30
-fi
+# Remove existing container completely to avoid name conflicts
+echo "🧹 Removing any existing container with name ${CONTAINER_NAME}..."
+docker rm -f "${CONTAINER_NAME}" || true
+
+# Stop any running docker-compose services
+echo "🛑 Stopping existing docker-compose services..."
+docker-compose down --timeout 30 || true
 
 # Build and start the new container
 echo "🏗️ Building and starting container..."
