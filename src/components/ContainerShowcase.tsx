@@ -122,10 +122,18 @@ const itemVariants = {
 };
 
 export default function ContainerShowcase() {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const toggleCategory = (categoryId: string) => {
-    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -179,7 +187,7 @@ export default function ContainerShowcase() {
                       {category.containers.length} containers
                     </span>
                     <motion.div
-                      animate={{ rotate: expandedCategory === category.id ? 180 : 0 }}
+                      animate={{ rotate: expandedCategories.has(category.id) ? 180 : 0 }}
                       transition={{ duration: 0.3 }}
                     >
                       <i className="fas fa-chevron-down text-slate-400 text-xs"></i>
@@ -192,8 +200,8 @@ export default function ContainerShowcase() {
             <motion.div
               initial={false}
               animate={{
-                height: expandedCategory === category.id ? 'auto' : 0,
-                opacity: expandedCategory === category.id ? 1 : 0
+                height: expandedCategories.has(category.id) ? 'auto' : 0,
+                opacity: expandedCategories.has(category.id) ? 1 : 0
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
