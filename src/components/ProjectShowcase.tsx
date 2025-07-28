@@ -22,9 +22,9 @@ const projects: Project[] = [
   {
     id: 'ai-inference-cluster',
     title: 'AI Inference Cluster',
-    description: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs. It handles Stable Diffusion generation, custom LLMs and fine‑tuned models for domain‑specific tasks with enterprise‑grade reliability.',
-    detailedDescription: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs. It handles Stable Diffusion generation, custom LLMs and fine‑tuned models for domain‑specific tasks with enterprise‑grade reliability.',
-    techStack: ['Docker Swarm', 'Enterprise & Consumer NVIDIA GPUs', 'PyTorch', 'Open WebUI'],
+    description: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs for running Stable Diffusion, custom LLMs and fine‑tuned models with enterprise‑grade reliability.',
+    detailedDescription: 'This powerhouse runs multiple AI workloads simultaneously, from image generation to language processing. Built on a foundation of high-performance GPUs and optimized inference pipelines.',
+    techStack: ['Ollama', 'Open WebUI', 'SillyTavern', 'Stable Diffusion WebUI', 'ComfyUI', 'NVIDIA Container Toolkit', 'PyTorch', 'CUDA 12.2'],
     highlights: [
       '40+ models deployed simultaneously',
       'Sub‑2 second image generation pipeline',
@@ -36,9 +36,9 @@ const projects: Project[] = [
   {
     id: 'automation-nexus',
     title: 'Automation Nexus',
-    description: 'The central nervous system of my homelab. This framework coordinates container orchestration, service monitoring and intelligent workflow management with n8n. It automates updates, scaling and even its own optimizations.',
-    detailedDescription: 'The central nervous system of my homelab. This framework coordinates container orchestration, service monitoring and intelligent workflow management with n8n. It automates updates, scaling and even its own optimizations.',
-    techStack: ['n8n', 'Docker Compose', 'Grafana', 'Prometheus', 'Home Assistant'],
+    description: 'The central nervous system of my homelab, orchestrating containers, monitoring services, and managing intelligent workflows that automate everything from updates to self-optimization.',
+    detailedDescription: 'A sophisticated automation framework that keeps the entire infrastructure running smoothly. From container health checks to predictive scaling, it handles thousands of decisions daily.',
+    techStack: ['n8n', 'Home Assistant', 'Authelia', 'Watchtower', 'Portainer-CE', 'Grafana', 'Prometheus', 'Dozzle'],
     highlights: [
       '200+ automated workflows active',
       '99.9% infrastructure uptime',
@@ -51,9 +51,9 @@ const projects: Project[] = [
   {
     id: 'network-fortress',
     title: 'Network Fortress',
-    description: 'A zero‑trust network built with Unifi gear, segmented VLANs, reverse proxy routing via Nginx Proxy Manager, Pi‑hole and AdGuard for DNS filtering, and automated threat detection. It maintains seamless user experience while keeping attacks at bay.',
-    detailedDescription: 'A zero‑trust network built with Unifi gear, segmented VLANs, reverse proxy routing via Nginx Proxy Manager, Pi‑hole and AdGuard for DNS filtering, and automated threat detection. It maintains seamless user experience while keeping attacks at bay.',
-    techStack: ['Unifi Controller', 'Nginx Proxy Manager', 'Pi‑hole', 'AdGuard'],
+    description: 'A zero‑trust network architecture with segmented VLANs, comprehensive DNS filtering, and multi-layer security that maintains seamless user experience while blocking threats.',
+    detailedDescription: 'Enterprise-grade network security at home. Multiple layers of protection from DNS to application level, with intelligent threat detection and automatic response mechanisms.',
+    techStack: ['Unifi Controller', 'Nginx Proxy Manager', 'SWAG', 'Pi-hole', 'AdGuard Home', 'Cloudflared', 'OpenVPN-AS', 'Vaultwarden', 'FlareSolverr'],
     highlights: [
       '4 isolated VLANs',
       'Sub‑10 ms internal routing latency',

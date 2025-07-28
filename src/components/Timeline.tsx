@@ -13,20 +13,12 @@ interface TimelineItem {
 
 const timelineData: TimelineItem[] = [
   {
-    id: 'botrista-2025',
-    dates: 'Jan 2025 - Present',
-    title: 'Manager, Regional Sales Operations',
-    company: 'Botrista, Inc.',
-    summary: 'Orchestrating beverage robotics across multiple U.S. regions. Leading partner accounts, conducting advanced diagnostics, and scaling operations nationwide. Because someone has to keep the robots caffeinated.',
-    icon: BeakerIcon
-  },
-  {
     id: 'botrista-2023',
-    dates: 'Mar 2023 - Dec 2024',
+    dates: 'Mar 2023 - Present',
     title: 'Partner Operations Manager',
     company: 'Botrista, Inc.',
-    summary: 'Managed partner operational efficiency, enabling scalable growth through process automation. Designed training programs for IT onboarding/offboarding and collaborated on product deployment strategies.',
-    icon: BuildingOfficeIcon
+    summary: 'Orchestrating beverage robotics across multiple U.S. regions. Managing partner operational efficiency, conducting advanced diagnostics, and scaling operations nationwide through process automation.',
+    icon: BeakerIcon
   },
   {
     id: 'chowbotics',
