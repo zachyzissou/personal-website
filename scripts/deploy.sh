@@ -85,7 +85,7 @@ docker ps | grep personal-website || echo "❌ Container not found in running st
 # Health check
 echo "🔍 Running health check..."
 HEALTH_CHECK_URL="http://localhost:18475/health"
-MAX_ATTEMPTS=60
+MAX_ATTEMPTS=15
 ATTEMPT=1
 
 # Test basic connectivity first
@@ -112,6 +112,8 @@ while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
     
     if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
         echo "❌ Health check failed after $MAX_ATTEMPTS attempts"
+        echo "🔍 Container logs for debugging:"
+        docker logs personal-website --tail 30 || echo "Could not get container logs"
         echo "🔄 Rolling back to previous version..."
         
         # Rollback logic
