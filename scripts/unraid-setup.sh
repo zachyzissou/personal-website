@@ -91,7 +91,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "18475:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
@@ -149,7 +149,7 @@ if docker ps | grep -q "personal-website"; then
     echo "[$DATE] ✅ Container is running" >> "$LOG_FILE"
     
     # Check if website is responding
-    if curl -f -s http://localhost:3000/health > /dev/null; then
+    if curl -f -s http://localhost:18475/health > /dev/null; then
         echo "[$DATE] ✅ Website is healthy" >> "$LOG_FILE"
     else
         echo "[$DATE] ❌ Website health check failed" >> "$LOG_FILE"

@@ -60,7 +60,7 @@ sleep 10
 
 # Health check
 echo "🔍 Running health check..."
-HEALTH_CHECK_URL="http://localhost:3000"
+HEALTH_CHECK_URL="http://localhost:18475"
 MAX_ATTEMPTS=30
 ATTEMPT=1
 

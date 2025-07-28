@@ -43,7 +43,7 @@ npm run preview
 docker build -t personal-website .
 
 # Run locally
-docker run -p 3000:80 personal-website
+docker run -p 18475:80 personal-website
 ```
 
 ### Using Docker Compose
@@ -80,7 +80,7 @@ server {
     server_name yourdomain.com;
     
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:18475;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

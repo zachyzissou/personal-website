@@ -59,6 +59,9 @@ docker ps | grep personal-website
 # View application logs
 docker logs personal-website
 
+# Test website (using your unique port)
+curl http://localhost:18475
+
 # Monitor runner logs
 docker logs Docker-Github-Actions-Runner-personal-website
 
