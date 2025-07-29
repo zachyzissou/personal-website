@@ -1,0 +1,19 @@
+{
+  "name": "Zach Gonser - Tech Wizard & Homelab Architect",
+  "short_name": "Zach Gonser",
+  "description": "Portfolio of Zach Gonser - Ex-DoorDash, ex-Apple engineer specializing in homelab infrastructure and automation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#a855f7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "technology"]
+}
