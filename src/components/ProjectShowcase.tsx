@@ -212,13 +212,14 @@ export default function ProjectShowcase() {
   };
 
   const handleDragEnd = (event: any, info: any) => {
-    const threshold = 30; // Lower threshold for more responsive swipes
-    const velocity = info.velocity.x;
+    const threshold = 75;
+    const velocity = Math.abs(info.velocity.x);
+    const offset = info.offset.x;
     
-    // Consider both offset and velocity for better swipe detection
-    if (info.offset.x > threshold || velocity > 500) {
+    // More responsive thresholds based on velocity and distance
+    if ((offset > threshold && velocity > 300) || (offset > 150)) {
       prevCard();
-    } else if (info.offset.x < -threshold || velocity < -500) {
+    } else if ((offset < -threshold && velocity > 300) || (offset < -150)) {
       nextCard();
     }
   };
@@ -299,16 +300,23 @@ export default function ProjectShowcase() {
         {/* Mobile Carousel View */}
         {isMobile && (
           <div className="relative overflow-hidden"
-            style={{ marginBottom: 'var(--space-xl)' }}
+            style={{ \n              marginBottom: 'var(--space-xl)',\n              touchAction: 'pan-x pinch-zoom'\n            }}
           >
           <motion.div
             className="flex"
             animate={{ x: `-${currentIndex * 100}%` }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 500, 
+              damping: 30,
+              mass: 0.8
+            }}
             style={{ gap: '0' }}
             drag="x"
-            dragConstraints={{ left: -50, right: 50 }}
-            dragElastic={0.2}
+            dragDirectionLock={true}
+            dragConstraints={{ left: -100, right: 100 }}
+            dragElastic={0.3}
+            dragMomentum={false}
             onDragEnd={handleDragEnd}
           >
             {projects.map((project, index) => (

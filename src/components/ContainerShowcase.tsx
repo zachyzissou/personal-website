@@ -163,12 +163,14 @@ export default function ContainerShowcase() {
   };
 
   const handleDragEnd = (event: any, info: any) => {
-    const threshold = 50;
-    const velocity = info.velocity.x;
+    const threshold = 75;
+    const velocity = Math.abs(info.velocity.x);
+    const offset = info.offset.x;
     
-    if (info.offset.x > threshold || velocity > 500) {
+    // More responsive thresholds based on velocity and distance
+    if ((offset > threshold && velocity > 300) || (offset > 150)) {
       prevCard();
-    } else if (info.offset.x < -threshold || velocity < -500) {
+    } else if ((offset < -threshold && velocity > 300) || (offset < -150)) {
       nextCard();
     }
   };
@@ -311,15 +313,26 @@ export default function ContainerShowcase() {
 
       {/* Mobile Carousel View */}
       {isMobile && (
-        <div className="container-mobile-carousel" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div className="container-mobile-carousel" style={{ 
+          position: 'relative', 
+          overflow: 'hidden',
+          touchAction: 'pan-x pinch-zoom'
+        }}>
         <motion.div
           className="flex"
           animate={{ x: `-${currentIndex * 100}%` }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 500, 
+            damping: 30,
+            mass: 0.8
+          }}
           style={{ gap: '0' }}
           drag="x"
-          dragConstraints={{ left: -50, right: 50 }}
-          dragElastic={0.2}
+          dragDirectionLock={true}
+          dragConstraints={{ left: -100, right: 100 }}
+          dragElastic={0.3}
+          dragMomentum={false}
           onDragEnd={handleDragEnd}
         >
           {categories.map((category, index) => (
