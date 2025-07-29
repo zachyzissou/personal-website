@@ -23,7 +23,7 @@ const projects: Project[] = [
     id: 'ai-inference-cluster',
     title: 'AI Inference Cluster',
     description: 'A distributed compute cluster combining enterprise‑grade and consumer NVIDIA GPUs for running Stable Diffusion, custom LLMs and fine‑tuned models with enterprise‑grade reliability.',
-    detailedDescription: 'This powerhouse runs multiple AI workloads simultaneously, from image generation to language processing. Built on a foundation of high-performance GPUs and optimized inference pipelines.',
+    detailedDescription: 'This powerhouse orchestrates multiple AI workloads simultaneously, from image generation to language processing. Built on a foundation of high-performance GPUs and optimized inference pipelines.',
     techStack: ['Ollama', 'Open WebUI', 'SillyTavern', 'Stable Diffusion WebUI', 'ComfyUI', 'NVIDIA Container Toolkit', 'PyTorch', 'CUDA 12.2'],
     highlights: [
       '40+ models deployed simultaneously',
@@ -190,6 +190,18 @@ function ProjectCard({ project }: ProjectCardProps) {
 
 export default function ProjectShowcase() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const nextCard = () => {
     setCurrentIndex((prev) => (prev + 1) % projects.length);
@@ -265,30 +277,35 @@ export default function ProjectShowcase() {
           </p>
         </motion.div>
 
-        {/* Responsive Grid View */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          style={{ 
-            gap: 'var(--space-md)',
-            marginBottom: 'var(--space-xl)'
-          }}
-        >
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </motion.div>
+        {/* Desktop Grid View */}
+        {!isMobile && (
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-3"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            style={{ 
+              gap: 'var(--space-md)',
+              marginBottom: 'var(--space-xl)'
+            }}
+          >
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </motion.div>
+        )}
 
-        {/* Legacy Mobile Carousel View - Hidden */}
-        <div className="hidden relative overflow-hidden">
+        {/* Mobile Carousel View */}
+        {isMobile && (
+          <div className="relative overflow-hidden"
+            style={{ marginBottom: 'var(--space-xl)' }}
+          >
           <motion.div
             className="flex"
-            animate={{ x: `calc(-${currentIndex * 100}% - ${currentIndex * 1.5}rem)` }}
+            animate={{ x: `-${currentIndex * 100}%` }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            style={{ gap: 'var(--space-md)' }}
+            style={{ gap: '0' }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.1}
@@ -299,8 +316,9 @@ export default function ProjectShowcase() {
                 key={project.id}
                 className="flex-shrink-0"
                 style={{ 
-                  width: 'calc(100vw - 6rem)',
-                  maxWidth: '400px'
+                  width: '100%',
+                  minWidth: '100%',
+                  padding: '0 2rem'
                 }}
                 animate={{
                   scale: index === currentIndex ? 1 : 0.9,
@@ -361,6 +379,7 @@ export default function ProjectShowcase() {
             Swipe or use arrows to navigate
           </p>
         </div>
+        )}
       </div>
     </section>
   );

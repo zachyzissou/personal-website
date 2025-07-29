@@ -580,11 +580,14 @@ import InteractiveTools from '../components/InteractiveTools';
       grid-template-columns: 1fr;
       gap: var(--space-xl);
       align-items: center;
+      max-width: var(--max-width-text);
+      margin: 0 auto;
     }
 
     @media (min-width: 768px) {
       .about-grid {
-        grid-template-columns: 1fr 1fr;
+        max-width: var(--max-width-content);
+        grid-template-columns: 1fr;
       }
     }
 
@@ -592,6 +595,14 @@ import InteractiveTools from '../components/InteractiveTools';
       font-size: var(--text-lg);
       color: var(--text-secondary);
       line-height: 1.7;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    @media (max-width: 767px) {
+      .about-text {
+        text-align: left;
+      }
     }
 
     .about-text p {
@@ -1012,13 +1023,47 @@ import InteractiveTools from '../components/InteractiveTools';
 
       /* Fix gradient text on mobile */
       .gradient-text {
-        -webkit-text-fill-color: unset;
+        /* Fallback for better mobile compatibility */
+        color: var(--text-primary) !important;
         background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
         -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         background-clip: text;
-        color: transparent;
         /* Disable all animations on mobile */
         animation: none !important;
+        /* Ensure proper text rendering */
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+      
+      /* Additional mobile gradient text fixes */
+      .gradient-text,
+      h1.gradient-text,
+      h2.gradient-text,
+      h3.gradient-text {
+        /* Force proper text display on mobile browsers */
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        -webkit-background-clip: text !important;
+        color: transparent !important;
+        /* Ensure gradient is applied */
+        background-image: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) !important;
+        background-size: 100% 100% !important;
+        /* Fix potential rendering issues */
+        will-change: auto;
+        transform: translateZ(0);
+      }
+      
+      /* Fallback for browsers that don't support background-clip: text */
+      @supports not (-webkit-background-clip: text) {
+        .gradient-text,
+        h1.gradient-text,
+        h2.gradient-text,
+        h3.gradient-text {
+          background: none !important;
+          color: var(--accent-primary) !important;
+          -webkit-text-fill-color: var(--accent-primary) !important;
+        }
       }
       
       /* Hide ALL shimmer and pseudo-element effects on mobile */
@@ -1145,13 +1190,13 @@ import InteractiveTools from '../components/InteractiveTools';
         <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        Manager, Regional Sales Operations & Homelab Architect
+Partner Operations Manager at Botrista & Homelab Architect
         <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>
       </div>
       <p class="hero-description">
-        I'm a hands-on technologist specializing in automation, AI, and scalable operations. With experience spanning Apple, DoorDash, and now Botrista, I orchestrate beverage robotics by day while architecting a self-hosted infrastructure that exemplifies modern DevOps excellence.
+I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash and ex-Apple, I now scale beverage robots at Botrista while building and maintaining a self-hosted infrastructure that would make any systems architect proud.
       </p>
       <div class="hero-buttons">
         <a href="#homelab" class="btn btn-primary">
@@ -1195,10 +1240,10 @@ import InteractiveTools from '../components/InteractiveTools';
             <h3 class="service-title">Media Empire</h3>
           </div>
           <ul class="service-list">
-            <li>Plex/Jellyfin for media streaming</li>
-            <li>Arr stack for content management</li>
-            <li>Multi-room audio systems</li>
-            <li>4K transcoding that actually works</li>
+            <li>Engineered Unraid NAS powerhouse with 100TB+ storage</li>
+            <li>Seamless 4K transcoding across multiple devices</li>
+            <li>Automated content acquisition and organization</li>
+            <li>Multi-room audio distribution system</li>
           </ul>
         </div>
 
@@ -1210,10 +1255,10 @@ import InteractiveTools from '../components/InteractiveTools';
             <h3 class="service-title">AI Playground</h3>
           </div>
           <ul class="service-list">
-            <li>Stable Diffusion generation</li>
-            <li>Local LLMs via BigAGI/Open WebUI/LocalAI</li>
-            <li>Personal AI assistant pipeline</li>
-            <li>Custom fine-tuning</li>
+            <li>Harnessed Stable Diffusion for generative AI experiments</li>
+            <li>Local LLMs via Ollama with multiple interface options</li>
+            <li>Custom AI workflows integrated with automation</li>
+            <li>High-throughput inference cluster optimization</li>
           </ul>
         </div>
 
@@ -1359,7 +1404,7 @@ import InteractiveTools from '../components/InteractiveTools';
           Let's Connect & Collaborate
         </a>
         <p style="margin-top: var(--space-sm); color: var(--text-muted); font-size: var(--text-sm);">
-          Open to discussing automation projects, infrastructure consulting, or just geeking out about technology
+          Ready to establish secure connections and geek out over homelabs, AI, automation, or robotics
         </p>
       </div>
 
@@ -1375,6 +1420,9 @@ import InteractiveTools from '../components/InteractiveTools';
   </section>
 
   <script>
+    // Secret lab state
+    let secretLabVisible = false;
+    
     // Theme persistence and Konami code
     document.addEventListener('DOMContentLoaded', function() {
       // Smooth scrolling for anchor links
@@ -1392,15 +1440,15 @@ import InteractiveTools from '../components/InteractiveTools';
         });
       });
 
-      // Konami Code Easter Egg - Metal Gear Solid Style
+      // Konami Code Easter Egg - Enhanced Version
       let konamiCode = [38,38,40,40,37,39,37,39,66,65]; // ↑↑↓↓←→←→BA
       let konamiIndex = 0;
       
       document.addEventListener('keydown', (e) => {
-        if (e.keyCode === konamiCode[konamiIndex]) {
+        if (e.code === `Key${String.fromCharCode(konamiCode[konamiIndex])}` || e.keyCode === konamiCode[konamiIndex]) {
           konamiIndex++;
           if (konamiIndex === konamiCode.length) {
-            // Metal Gear Solid Alert Effect
+            // Enhanced Secret Lab Access
             triggerMGSAlert();
             konamiIndex = 0;
           }
@@ -1408,6 +1456,99 @@ import InteractiveTools from '../components/InteractiveTools';
           konamiIndex = 0;
         }
       });
+
+      function toggleSecretLab() {
+        const existingLab = document.getElementById('secret-lab');
+        if (existingLab) {
+          existingLab.remove();
+          secretLabVisible = false;
+          return;
+        }
+        
+        secretLabVisible = true;
+        createSecretLabOverlay();
+      }
+
+      function createSecretLabOverlay() {
+        const secretLab = document.createElement('div');
+        secretLab.id = 'secret-lab';
+        secretLab.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+          border: 2px solid var(--accent-primary);
+          border-radius: var(--radius-lg);
+          padding: var(--space-xl);
+          max-width: 600px;
+          width: 90vw;
+          z-index: 1000000;
+          box-shadow: var(--premium-glow), var(--premium-shadow);
+          backdrop-filter: blur(20px);
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        `;
+        
+        secretLab.innerHTML = `
+          <div style="text-align: center; margin-bottom: var(--space-lg);">
+            <h3 style="color: var(--accent-primary); font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-sm);">
+              🔬 Secret Lab Access Granted
+            </h3>
+            <div style="width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-primary), transparent); margin: var(--space-md) 0;"></div>
+          </div>
+          
+          <div style="color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-lg);">
+            <h4 style="color: var(--accent-secondary); font-size: var(--text-lg); margin-bottom: var(--space-sm);">
+              🤖 Deep Dive into My AI Cluster
+            </h4>
+            <p style="margin-bottom: var(--space-md);">
+              Leveraging NVIDIA CUDA architecture for distributed inference across multiple GPUs, achieving 99.9% uptime via advanced container orchestration and intelligent load balancing.
+            </p>
+            
+            <h4 style="color: var(--accent-tertiary); font-size: var(--text-lg); margin-bottom: var(--space-sm);">
+              ⚡ Automation Secrets
+            </h4>
+            <p style="margin-bottom: var(--space-md);">
+              My favorite hack: Using n8n to chain Stable Diffusion generation with real-time performance monitoring, automatically scaling resources based on queue depth and GPU utilization.
+            </p>
+            
+            <h4 style="color: var(--accent-primary); font-size: var(--text-lg); margin-bottom: var(--space-sm);">
+              🔧 Infrastructure Highlights
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: var(--space-xs); display: flex; align-items: center; gap: var(--space-sm);">
+                <span style="color: var(--accent-tertiary);">▶</span> 50+ Docker containers in perfect harmony
+              </li>
+              <li style="margin-bottom: var(--space-xs); display: flex; align-items: center; gap: var(--space-sm);">
+                <span style="color: var(--accent-tertiary);">▶</span> Kubernetes-style orchestration with zero downtime deployments
+              </li>
+              <li style="margin-bottom: var(--space-xs); display: flex; align-items: center; gap: var(--space-sm);">
+                <span style="color: var(--accent-tertiary);">▶</span> AI model inference cluster with sub-2 second response times
+              </li>
+              <li style="display: flex; align-items: center; gap: var(--space-sm);">
+                <span style="color: var(--accent-tertiary);">▶</span> Network segmentation across 4 isolated VLANs
+              </li>
+            </ul>
+          </div>
+          
+          <div style="text-align: center; padding-top: var(--space-md); border-top: 1px solid var(--border-color);">
+            <button onclick="document.getElementById('secret-lab').remove(); secretLabVisible = false;" 
+              style="background: var(--accent-primary); color: white; border: none; padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; transition: all 0.3s ease;"
+              onmouseover="this.style.background='var(--accent-secondary)'" 
+              onmouseout="this.style.background='var(--accent-primary)'">
+              Close Lab Access
+            </button>
+          </div>
+        `;
+        
+        document.body.appendChild(secretLab);
+        
+        // Trigger animation
+        setTimeout(() => {
+          secretLab.style.opacity = '1';
+        }, 10);
+      }
 
       function triggerMGSAlert() {
         // Create alert sound effect (visual representation)
@@ -1448,89 +1589,16 @@ import InteractiveTools from '../components/InteractiveTools';
         alertBanner.innerHTML = '⚠️ ALERT! INFILTRATOR DETECTED! ⚠️';
         document.body.appendChild(alertBanner);
 
-        // Stealth Camo Effect - make website "invisible"
+        // After alert effects, show secret lab
         setTimeout(() => {
-          // Create a backdrop div that gets blurred instead of the whole body
-          const blurBackdrop = document.createElement('div');
-          blurBackdrop.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(2px);
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 999997;
-            transition: all 2s ease-in-out;
-          `;
-          document.body.appendChild(blurBackdrop);
+          if (document.body.contains(alertOverlay)) document.body.removeChild(alertOverlay);
+          if (document.body.contains(alertBanner)) document.body.removeChild(alertBanner);
           
-          // Show Kojima-style codec message
-          const codecMessage = document.createElement('div');
-          codecMessage.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 3px solid #0f3460;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 600px;
-            z-index: 1000000;
-            font-family: 'Space Grotesk', monospace;
-            color: #00ff41;
-            box-shadow: 0 0 50px rgba(15, 52, 96, 0.8);
-            animation: codecAppear 1s ease-out;
-          `;
-          
-          codecMessage.innerHTML = `
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-              <div style="width: 60px; height: 60px; background: #0f3460; border: 2px solid #00ff41; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px;">
-                🎮
-              </div>
-              <div>
-                <div style="color: #00ff41; font-size: 14px; margin-bottom: 5px;">CODEC TRANSMISSION</div>
-                <div style="color: #ffffff; font-size: 18px; font-weight: bold;">KOJIMA PRODUCTIONS</div>
-              </div>
-            </div>
-            
-            <div style="border-top: 1px solid #0f3460; padding-top: 20px; line-height: 1.6;">
-              <p style="margin: 0 0 15px 0; color: #ffffff;">
-                <strong style="color: #00ff41;">Colonel:</strong> Snake, you've activated the homelab's stealth camouflage system. 
-                This level of infrastructure automation is unprecedented...
-              </p>
-              
-              <p style="margin: 0 0 15px 0; color: #ffffff;">
-                <strong style="color: #ffaa00;">Snake:</strong> Colonel, these Docker containers... they're everywhere. 
-                It's like they're multiplying on their own. Is this the work of the Patriots?
-              </p>
-              
-              <p style="margin: 0 0 20px 0; color: #ffffff;">
-                <strong style="color: #00ff41;">Colonel:</strong> No Snake, this is something far more sophisticated. 
-                A homelab so advanced it transcends the digital divide. You're looking at the future of self-hosted excellence.
-              </p>
-              
-              <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #0f3460;">
-                <div style="color: #00ff41; font-size: 12px; font-style: italic;">
-                  "A homelab to surpass Metal Gear..." - Hideo Kojima (probably)
-                </div>
-              </div>
-            </div>
-          `;
-          
-          document.body.appendChild(codecMessage);
-          
-          // Auto-close after 8 seconds
-          setTimeout(() => {
-            if (document.body.contains(alertOverlay)) document.body.removeChild(alertOverlay);
-            if (document.body.contains(alertBanner)) document.body.removeChild(alertBanner);
-            if (document.body.contains(blurBackdrop)) document.body.removeChild(blurBackdrop);
-            if (document.body.contains(codecMessage)) document.body.removeChild(codecMessage);
-          }, 8000);
-          
-        }, 2000); // Show codec message after 2 seconds
+          // Show secret lab instead of MGS codec
+          toggleSecretLab();
+        }, 3000);
       }
+      
 
       // Add Metal Gear Solid animation keyframes
       const style = document.createElement('style');
