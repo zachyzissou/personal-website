@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Tool {
   id: string;
@@ -18,7 +18,7 @@ const tools: Tool[] = [
     category: 'Media Server',
     description: 'Personal media streaming powerhouse serving 4K content across multiple devices with transcoding magic.',
     details: 'Plex transforms my homelab into a Netflix-like experience, streaming my entire media collection with intelligent transcoding, remote access, and beautiful metadata management. Handles everything from 4K movies to music libraries with enterprise-grade reliability.',
-    screenshot: '/screenshots/plex-new.png',
+    screenshot: '/screenshots/plex.png',
     icon: '/screenshots/plex-icon.png'
   },
   {
@@ -45,7 +45,7 @@ const tools: Tool[] = [
     category: 'Automation',
     description: 'Visual workflow automation platform orchestrating complex multi-step processes across services.',
     details: 'n8n is the neural network of my homelab, connecting 50+ containers with intelligent workflows. Handles everything from automated media processing and health monitoring to content aggregation and cross-service orchestration - the invisible hand that makes complex systems look effortless.',
-    screenshot: '/screenshots/n8n-new.png',
+    screenshot: '/screenshots/n8n.png',
     icon: '/screenshots/n8n-icon.png'
   },
   {
@@ -54,7 +54,7 @@ const tools: Tool[] = [
     category: 'Smart Home',
     description: 'Central hub controlling smart home devices with advanced automation and beautiful dashboards.',
     details: 'Home Assistant orchestrates my smart home ecosystem, managing lights, sensors, and IoT devices with sophisticated automation rules. Provides stunning dashboards and integrates seamlessly with the broader homelab infrastructure.',
-    screenshot: '/screenshots/home-assistant.png',
+    screenshot: '/screenshots/homeassistant.png',
     icon: '/screenshots/home-assistant-icon.png'
   },
   {
@@ -72,7 +72,7 @@ const tools: Tool[] = [
     category: 'Reverse Proxy',
     description: 'Web-based nginx proxy manager handling SSL certificates and routing for all services.',
     details: 'NPM is the gateway to my homelab, managing reverse proxy rules, SSL certificates, and access control. Provides secure external access to services while maintaining internal network segmentation.',
-    screenshot: '/screenshots/nginx-proxy-manager-new.png',
+    screenshot: '/screenshots/nginx.png',
     icon: '/screenshots/nginx-proxy-manager-icon.png'
   },
   {
@@ -81,7 +81,7 @@ const tools: Tool[] = [
     category: 'Media Analytics',
     description: 'Advanced Plex monitoring and statistics providing detailed insights into media consumption.',
     details: 'Tautulli tracks every aspect of my Plex server usage, from user activity to bandwidth consumption. Provides beautiful dashboards showing streaming trends, most popular content, and server performance metrics.',
-    screenshot: '/screenshots/tautulli-new.png',
+    screenshot: '/screenshots/tautulli.png',
     icon: '/screenshots/tautulli-icon.png'
   },
   {
@@ -90,7 +90,7 @@ const tools: Tool[] = [
     category: 'Media Automation',
     description: 'Automated movie management with intelligent downloading and library organization.',
     details: 'Radarr handles my entire movie collection, automatically searching for and downloading films based on quality preferences and availability. Seamlessly integrates with download clients and organizes everything for optimal Plex experience.',
-    screenshot: '/screenshots/radarr-new.png',
+    screenshot: '/screenshots/radarr.png',
     icon: '/screenshots/radarr-icon.png'
   },
   {
@@ -99,7 +99,7 @@ const tools: Tool[] = [
     category: 'Network Management',
     description: 'Enterprise network management controlling VLANs, access points, and security policies.',
     details: 'The UniFi Controller manages my enterprise-grade network infrastructure, controlling multiple VLANs, WiFi access points, and security rules. Provides detailed analytics and centralized configuration for the entire network.',
-    screenshot: '/screenshots/unifi-controller.png',
+    screenshot: '/screenshots/unifi.png',
     icon: '/screenshots/unifi-icon.png'
   },
   {
@@ -117,7 +117,7 @@ const tools: Tool[] = [
     category: 'Media Requests',
     description: 'Elegant media request management system for Plex with user-friendly interface.',
     details: 'Overseerr provides a beautiful interface for users to request movies and TV shows, automatically integrating with Sonarr and Radarr to fulfill requests. Features user management, approval workflows, and seamless Plex integration.',
-    screenshot: '/screenshots/overseerr-new.png',
+    screenshot: '/screenshots/overseer.png',
     icon: '/screenshots/overseerr-icon.png'
   }
 ];
@@ -142,6 +142,16 @@ const getToolIcon = (category: string): string => {
 
 const InteractiveTools: React.FC = () => {
   const [selectedTool, setSelectedTool] = useState<Tool>(tools[0]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageLoadError, setImageLoadError] = useState<string | null>(null);
+  
+  // Reset error state when tool changes
+  React.useEffect(() => {
+    setImageLoadError(null);
+  }, [selectedTool]);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="interactive-tools-container">
@@ -160,7 +170,7 @@ const InteractiveTools: React.FC = () => {
             className="tool-screenshot"
             style={{
               width: '100%',
-              height: '250px',
+              aspectRatio: '16 / 9',
               borderRadius: 'var(--radius-lg)',
               background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(6, 182, 212, 0.1))',
               border: '1px solid var(--border-color)',
@@ -172,46 +182,67 @@ const InteractiveTools: React.FC = () => {
               position: 'relative'
             }}
           >
-            {/* Show actual screenshot if available, otherwise show placeholder */}
-            {(selectedTool.id === 'plex' || selectedTool.id === 'open-webui' || selectedTool.id === 'sonarr' || selectedTool.id === 'home-assistant' || selectedTool.id === 'radarr' || selectedTool.id === 'ollama' || selectedTool.id === 'n8n' || selectedTool.id === 'nginx-proxy-manager' || selectedTool.id === 'tautulli' || selectedTool.id === 'pihole' || selectedTool.id === 'overseerr') ? (
+            {/* Show actual screenshot if available and not errored, otherwise show placeholder */}
+            {selectedTool.screenshot && imageLoadError !== selectedTool.id && (
               <img
                 src={selectedTool.screenshot}
                 alt={`${selectedTool.name} Interface`}
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'contain',
-                  objectPosition: 'center'
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s ease',
+                  position: 'relative',
+                  zIndex: 2
+                }}
+                onClick={openModal}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.02)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+                onError={() => {
+                  console.error(`Failed to load screenshot for ${selectedTool.name}:`, selectedTool.screenshot);
+                  setImageLoadError(selectedTool.id);
+                }}
+                onLoad={() => {
+                  console.log(`Successfully loaded screenshot for ${selectedTool.name}`);
                 }}
               />
-            ) : (
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: `linear-gradient(45deg, rgba(168, 85, 247, 0.05), rgba(6, 182, 212, 0.05))`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 'var(--space-xs)'
-              }}>
-                <div style={{
-                  fontSize: 'var(--text-4xl)',
-                  opacity: 0.3
-                }}>
-                  {getToolIcon(selectedTool.category)}
-                </div>
-                <div style={{
-                  fontSize: 'var(--text-sm)',
-                  color: 'var(--text-muted)',
-                  textAlign: 'center'
-                }}>
-                  {selectedTool.name} Interface
-                  <br />
-                  <span style={{ fontSize: 'var(--text-xs)' }}>Screenshot placeholder</span>
-                </div>
-              </div>
             )}
+            
+            {/* Fallback placeholder */}
+            <div 
+              className="screenshot-placeholder"
+              style={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(45deg, rgba(168, 85, 247, 0.05), rgba(6, 182, 212, 0.05))`,
+              display: (!selectedTool.screenshot || imageLoadError === selectedTool.id) ? 'flex' : 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              gap: 'var(--space-xs)'
+            }}>
+              <div style={{
+                fontSize: 'var(--text-4xl)',
+                opacity: 0.3
+              }}>
+                {getToolIcon(selectedTool.category)}
+              </div>
+              <div style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-muted)',
+                textAlign: 'center'
+              }}>
+                {selectedTool.name} Interface
+                <br />
+                <span style={{ fontSize: 'var(--text-xs)' }}>Screenshot placeholder</span>
+              </div>
+            </div>
           </div>
 
           {/* Tool Info */}
@@ -365,6 +396,128 @@ const InteractiveTools: React.FC = () => {
           }
         `
       }} />
+
+      {/* Screenshot Modal */}
+      <AnimatePresence>
+        {isModalOpen && selectedTool.screenshot && imageLoadError !== selectedTool.id && (
+          <motion.div
+            className="screenshot-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModal}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: '2rem',
+              cursor: 'pointer'
+            }}
+          >
+            <motion.div
+              className="screenshot-modal-content"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                backgroundColor: 'var(--bg-secondary)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.5rem',
+                border: '1px solid var(--border-color)',
+                cursor: 'default'
+              }}
+            >
+              {/* Modal Header */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+                borderBottom: '1px solid var(--border-color)',
+                paddingBottom: '1rem'
+              }}>
+                <h3 style={{
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: '600',
+                  margin: 0
+                }}>
+                  {selectedTool.name} Interface
+                </h3>
+                <button
+                  onClick={closeModal}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    fontSize: '1.5rem',
+                    cursor: 'pointer',
+                    padding: '0.5rem',
+                    borderRadius: '50%',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+                    e.currentTarget.style.color = 'var(--text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'var(--text-muted)';
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Modal Image */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <img
+                  src={selectedTool.screenshot}
+                  alt={`${selectedTool.name} Interface - Full Size`}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '70vh',
+                    objectFit: 'contain',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-color)'
+                  }}
+                />
+              </div>
+
+              {/* Modal Footer */}
+              <div style={{
+                marginTop: '1rem',
+                paddingTop: '1rem',
+                borderTop: '1px solid var(--border-color)',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  color: 'var(--text-muted)',
+                  fontSize: 'var(--text-sm)',
+                  margin: 0
+                }}>
+                  Click outside to close • ESC to close
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

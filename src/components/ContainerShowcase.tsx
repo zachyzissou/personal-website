@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 
 interface Container {
@@ -122,10 +122,9 @@ const itemVariants = {
 };
 
 export default function ContainerShowcase() {
-  // All categories are always expanded now
-  const expandedCategories = new Set(categories.map(cat => cat.id));
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -137,6 +136,23 @@ export default function ContainerShowcase() {
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Don't render until we know if it's mobile or not
+  if (isMobile === null) {
+    return <div>Loading...</div>;
+  }
+
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  };
 
   const nextCard = () => {
     setCurrentIndex((prev) => (prev + 1) % categories.length);
@@ -202,12 +218,13 @@ export default function ContainerShowcase() {
           style={{
             display: 'grid',
             gap: '1.5rem',
-            gridTemplateColumns: 'repeat(2, 1fr)'
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            alignItems: 'start'
           }}
         >
         {categories.map((category) => (
           <motion.div
-            key={category.id}
+            key={`desktop-${category.id}`}
             variants={itemVariants}
             className="bg-slate-800/50 backdrop-blur-md border border-slate-600/30 rounded-2xl p-6 transition-all duration-300 hover:bg-slate-800/70 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 relative isolation-auto"
             style={{ isolation: 'isolate' }}
@@ -218,51 +235,75 @@ export default function ContainerShowcase() {
                   <i className={`fas ${category.icon} text-2xl text-white`}></i>
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-xl font-bold text-white mb-2">
-                    {category.title}
-                  </h4>
-                  <p className="text-slate-400 text-sm">
-                    {category.description}
-                  </p>
-                  <div className="mt-3">
-                    <span className="text-xs text-slate-500">
-                      {category.containers.length} containers
-                    </span>
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-white mb-2">
+                      {category.title}
+                    </h4>
+                    <p className="text-slate-400 text-sm">
+                      {category.description}
+                    </p>
+                    <div className="mt-3">
+                      <button
+                        onClick={() => toggleCategory(category.id)}
+                        className="flex items-center gap-1 hover:bg-slate-700/30 p-1 rounded transition-colors"
+                        aria-label={expandedCategories.has(category.id) ? 'Collapse containers' : 'Expand containers'}
+                      >
+                        <span className="text-xs text-slate-500">
+                          {category.containers.length} containers
+                        </span>
+                        <svg 
+                          className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${
+                            expandedCategories.has(category.id) ? 'rotate-180' : ''
+                          }`} 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="border-t border-slate-700/50 mt-4 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {category.containers.map((container, index) => (
-                    <motion.div
-                      key={`${category.id}-${container.name}-${index}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        delay: index * 0.05,
-                        duration: 0.2 
-                      }}
-                      className="p-2 rounded-lg transition-all duration-200 hover:bg-slate-700/30"
-                    >
-                      <div className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
-                        <div>
-                          <span className="font-semibold text-slate-200 text-sm block">{container.name}</span>
-                          <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
+            <AnimatePresence>
+              {expandedCategories.has(category.id) && (
+                <motion.div
+                  initial={{ opacity: 0, maxHeight: 0 }}
+                  animate={{ opacity: 1, maxHeight: '1000px' }}
+                  exit={{ opacity: 0, maxHeight: 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ overflow: 'hidden' }}
+                >
+                <div className="border-t border-slate-700/50 mt-4 pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {category.containers.map((container, index) => (
+                      <motion.div
+                        key={`desktop-${category.id}-${container.name}-${index}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          delay: index * 0.05,
+                          duration: 0.2 
+                        }}
+                        className="p-2 rounded-lg transition-all duration-200 hover:bg-slate-700/30"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                          <div>
+                            <span className="font-semibold text-slate-200 text-sm block">{container.name}</span>
+                            <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         ))}
       </motion.div>
@@ -283,7 +324,7 @@ export default function ContainerShowcase() {
         >
           {categories.map((category, index) => (
             <motion.div
-              key={category.id}
+              key={`mobile-${category.id}`}
               className="flex-shrink-0"
               style={{ 
                 width: '100%',
@@ -333,7 +374,7 @@ export default function ContainerShowcase() {
                     <div className="grid grid-cols-1 gap-3">
                       {category.containers.map((container, containerIndex) => (
                         <motion.div
-                          key={`${category.id}-${container.name}-${containerIndex}`}
+                          key={`mobile-${category.id}-${container.name}-${containerIndex}`}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ 
@@ -405,18 +446,6 @@ export default function ContainerShowcase() {
       </div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
-        className="mt-8 text-center"
-      >
-        <p className="text-xs text-slate-500 italic">
-          <i className="fas fa-shield-alt mr-2"></i>
-          Sensitive services like Vaultwarden and Nextcloud are firewalled and not publicly accessible
-        </p>
-      </motion.div>
 
     </div>
   );
