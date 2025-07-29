@@ -27,7 +27,7 @@ const tools: Tool[] = [
     category: 'AI Runtime',
     description: 'Local large language model runtime powering private AI conversations without cloud dependencies.',
     details: 'Ollama serves as the backbone for my local AI infrastructure, running models like Llama 3.1, Mistral, and specialized coding models. Provides enterprise-grade AI capabilities while maintaining complete data privacy and control.',
-    screenshot: '/screenshots/ollama.png',
+    screenshot: '/screenshots/ollama.png?v=2',
     icon: '/screenshots/ollama-icon.png'
   },
   {
