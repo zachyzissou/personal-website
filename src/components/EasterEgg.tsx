@@ -74,14 +74,14 @@ const EasterEgg: React.FC = () => {
         }}
         whileTap={{ scale: 0.95 }}
         onClick={handleRobotClick}
-        title="🤖 Something's hiding here... (5 clicks)"
+        title="🔬 Secret Lab Access Terminal... (5 clicks to unlock)"
       >
         <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full flex items-center justify-center border-2 border-purple-500/30 backdrop-blur-sm">
           <span 
             className="filter drop-shadow-lg"
             style={{ fontSize: 'var(--text-3xl)' }}
           >
-            🤖
+            🔬
           </span>
         </div>
         
@@ -214,13 +214,13 @@ const EasterEgg: React.FC = () => {
                     marginBottom: 'var(--space-sm)' 
                   }}
                 >
-                  HYPERSPACE JUMP
+                  ACCESSING SECRET LAB
                 </h1>
                 <p 
                   className="text-white opacity-80 font-mono"
                   style={{ fontSize: 'var(--text-xl)' }}
                 >
-                  Entering digital wormhole...
+                  Quantum tunneling through the digital infrastructure...
                 </p>
               </motion.div>
             </div>
@@ -274,25 +274,33 @@ const EasterEgg: React.FC = () => {
 
                 <div>
                   <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
-                    HYPERSPACE JUMP COMPLETE
+                    🔬 SECRET LAB ACCESS GRANTED 🔬
                   </h3>
                   <div className="space-y-4 text-slate-300 text-left">
                     <p className="text-sm bg-slate-800/50 p-3 rounded border-l-4 border-cyan-500">
-                      <strong className="text-cyan-400">JUMP COORDINATES:</strong> Welcome to the digital frontier, fellow space traveler! 
-                      You've successfully navigated through my homelab's hyperspace corridors. 
-                      The Millennium Falcon has nothing on my Docker orchestration skills.
+                      <strong className="text-cyan-400">CLEARANCE LEVEL:</strong> CLASSIFIED - You've discovered my digital laboratory! 
+                      Behind this public façade lies a self-sustaining ecosystem of automation, AI experimentation, 
+                      and infrastructure orchestration that would make the Pentagon jealous.
                     </p>
                     
                     <p className="text-sm bg-slate-800/50 p-3 rounded border-l-4 border-purple-500">
-                      <strong className="text-purple-400">WARP DRIVE STATUS:</strong> My infrastructure operates at lightspeed efficiency. 
-                      50+ containers, 3 VLANs, and enough automation to make R2-D2 jealous. 
-                      This isn't just a homelab—it's a technological Death Star (but for good).
+                      <strong className="text-purple-400">CLASSIFIED OPERATIONS:</strong> While others sleep, my lab runs continuous experiments: 
+                      • AI models generating art at 3AM<br/>
+                      • Automated workflows monitoring global data feeds<br/>
+                      • Self-healing containers that fix themselves<br/>
+                      • Neural networks dreaming in Docker
                     </p>
 
                     <p className="text-sm bg-slate-800/50 p-3 rounded border-l-4 border-emerald-500">
-                      <strong className="text-emerald-400">FORCE SENSITIVITY:</strong> The hyperspace jump has awakened something... 
-                      You now possess the ancient knowledge that the best infrastructure 
-                      is the one that runs itself while you sleep. Use this power wisely.
+                      <strong className="text-emerald-400">SECRET PROTOCOL:</strong> You've been granted temporary observer status. 
+                      The true power isn't in the 50+ containers or 3 VLANs—it's in the invisible orchestration 
+                      that makes complex systems look effortless. Welcome to the future of self-hosted excellence.
+                    </p>
+
+                    <p className="text-sm bg-slate-800/50 p-3 rounded border-l-4 border-orange-500">
+                      <strong className="text-orange-400">WARNING:</strong> This lab operates on quantum principles: 
+                      the more you observe it, the more it changes. Side effects may include uncontrollable urges 
+                      to automate everything and an addiction to perfectly optimized infrastructure.
                     </p>
                   </div>
                 </div>
@@ -303,7 +311,7 @@ const EasterEgg: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  RETURN TO NORMAL SPACE
+                  🔒 EXIT SECURE LAB
                 </motion.button>
               </div>
             </motion.div>

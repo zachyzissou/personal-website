@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface Container {
@@ -122,19 +121,8 @@ const itemVariants = {
 };
 
 export default function ContainerShowcase() {
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(categoryId)) {
-        newSet.delete(categoryId);
-      } else {
-        newSet.add(categoryId);
-      }
-      return newSet;
-    });
-  };
+  // All categories are always expanded now
+  const expandedCategories = new Set(categories.map(cat => cat.id));
 
   return (
     <div className="container-showcase mt-16">
@@ -145,7 +133,23 @@ export default function ContainerShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h3 className="text-3xl font-bold text-white mb-4">
+        <h3 
+          className="mb-4"
+          style={{
+            fontSize: 'clamp(var(--text-4xl), 5vw, var(--text-5xl))',
+            textAlign: 'center',
+            textShadow: '0 0 30px rgba(168, 85, 247, 0.3)',
+            fontFamily: 'Space Grotesk, sans-serif',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #a855f7, #06b6d4, #10b981, #a855f7)',
+            backgroundSize: '300% 300%',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            animation: 'gradientShift 6s ease-in-out infinite',
+            position: 'relative'
+          }}
+        >
           The Container Fleet
         </h3>
         <p className="text-slate-300 max-w-3xl mx-auto">
@@ -165,16 +169,10 @@ export default function ContainerShowcase() {
           <motion.div
             key={category.id}
             variants={itemVariants}
-            className="bg-slate-800/50 backdrop-blur-md border border-slate-600/30 rounded-2xl p-6 transition-all duration-300 hover:bg-slate-800/70 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10"
+            className="bg-slate-800/50 backdrop-blur-md border border-slate-600/30 rounded-2xl p-6 transition-all duration-300 hover:bg-slate-800/70 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 relative isolation-auto"
+            style={{ isolation: 'isolate' }}
           >
-            <div 
-              className="category-header cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleCategory(category.id);
-              }}
-            >
+            <div className="category-header">
               <div className="flex items-start gap-4">
                 <div className={`w-14 h-14 bg-gradient-to-br ${category.gradient} rounded-xl flex items-center justify-center flex-shrink-0`}>
                   <i className={`fas ${category.icon} text-2xl text-white`}></i>
@@ -186,37 +184,32 @@ export default function ContainerShowcase() {
                   <p className="text-slate-400 text-sm">
                     {category.description}
                   </p>
-                  <div className="mt-3 flex items-center gap-2">
+                  <div className="mt-3">
                     <span className="text-xs text-slate-500">
                       {category.containers.length} containers
                     </span>
-                    <motion.div
-                      animate={{ rotate: expandedCategories.has(category.id) ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <i className="fas fa-chevron-down text-slate-400 text-xs"></i>
-                    </motion.div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div 
-              className="overflow-hidden transition-all duration-300 ease-in-out"
-              style={{
-                maxHeight: expandedCategories.has(category.id) ? '1000px' : '0px',
-                opacity: expandedCategories.has(category.id) ? 1 : 0
-              }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
             >
               <div className="border-t border-slate-700/50 mt-4 pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {category.containers.map((container, index) => (
-                    <div
+                    <motion.div
                       key={`${category.id}-${container.name}-${index}`}
-                      className="p-2 rounded-lg transition-all duration-200 hover:bg-slate-700/30"
-                      style={{
-                        transitionDelay: expandedCategories.has(category.id) ? `${index * 50}ms` : '0ms'
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ 
+                        delay: index * 0.05,
+                        duration: 0.2 
                       }}
+                      className="p-2 rounded-lg transition-all duration-200 hover:bg-slate-700/30"
                     >
                       <div className="flex items-start gap-2">
                         <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
@@ -225,11 +218,11 @@ export default function ContainerShowcase() {
                           <p className="text-slate-400 text-xs leading-relaxed mt-0.5">{container.purpose}</p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         ))}
       </motion.div>

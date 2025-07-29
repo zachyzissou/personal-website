@@ -8,5 +8,8 @@
 		"recommendations": [
 			"anthropic.claude-code"
 		]
+	},
+	"settings": {
+		"claudeCodeChat.permissions.yoloMode": true
 	}
 }

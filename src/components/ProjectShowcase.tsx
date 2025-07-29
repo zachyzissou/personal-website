@@ -127,18 +127,18 @@ function ProjectCard({ project }: ProjectCardProps) {
           }}
         >
           {/* Header with Icon and Title */}
-          <div className="flex items-start gap-3 flex-shrink-0">
-            <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${project.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
-              <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300 mb-1 sm:mb-2">
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${project.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
+                <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 transition-all duration-300">
                 {project.title}
               </h3>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed group-hover:text-slate-200 transition-colors text-left">
-                {project.description}
-              </p>
             </div>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed group-hover:text-slate-200 transition-colors text-left">
+              {project.description}
+            </p>
           </div>
 
           {/* Detailed Description */}
@@ -213,9 +213,10 @@ export default function ProjectShowcase() {
 
   return (
     <section 
+      id="projects"
       className="section relative" 
       style={{ 
-        background: 'var(--bg-projects)',
+        background: 'transparent',
         padding: 'var(--space-4xl) var(--space-sm)'
       }}
     >
@@ -235,14 +236,20 @@ export default function ProjectShowcase() {
           className="text-center"
         >
           <h2 
-            className="gradient-text"
             style={{
               fontSize: 'clamp(var(--text-4xl), 5vw, var(--text-5xl))',
               textAlign: 'center',
               marginBottom: 'var(--space-2xl)',
               textShadow: '0 0 30px rgba(168, 85, 247, 0.3)',
               fontFamily: 'Space Grotesk, sans-serif',
-              fontWeight: '700'
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #a855f7, #06b6d4, #10b981, #a855f7)',
+              backgroundSize: '300% 300%',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: 'gradientShift 6s ease-in-out infinite',
+              position: 'relative'
             }}
           >
             Project Spotlight

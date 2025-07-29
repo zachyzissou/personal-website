@@ -5,6 +5,8 @@ import ProjectShowcase from '../components/ProjectShowcase';
 import ContainerShowcase from '../components/ContainerShowcase';
 import EasterEgg from '../components/EasterEgg';
 import AnimatedStats from '../components/AnimatedStats';
+import HamburgerMenu from '../components/HamburgerMenu';
+import InteractiveTools from '../components/InteractiveTools';
 ---
 
 <Layout title="Zach Gonser - Tech Wizard & Homelab Architect">
@@ -60,13 +62,14 @@ import AnimatedStats from '../components/AnimatedStats';
       --radius-2xl: 2rem;     /* 32px - button/card radius */
       --radius-full: 50%;     /* circular */
       
-      /* DESIGN SYSTEM SECTION BACKGROUNDS */
-      --bg-hero: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, transparent 50%, rgba(6, 182, 212, 0.03) 100%);
-      --bg-journey: linear-gradient(180deg, var(--bg-primary) 0%, rgba(17, 17, 17, 0.8) 100%);
-      --bg-homelab: linear-gradient(45deg, var(--bg-primary) 0%, rgba(30, 41, 59, 0.3) 50%, var(--bg-primary) 100%);
-      --bg-projects: linear-gradient(90deg, var(--bg-primary) 0%, rgba(139, 92, 246, 0.02) 50%, var(--bg-primary) 100%);
-      --bg-about: linear-gradient(225deg, var(--bg-primary) 0%, rgba(16, 185, 129, 0.02) 50%, var(--bg-primary) 100%);
-      --bg-contact: linear-gradient(135deg, var(--bg-primary) 0%, rgba(6, 182, 212, 0.02) 50%, var(--bg-primary) 100%);
+      /* OPTIMIZED ANIMATED BACKGROUND SYSTEM */
+      --bg-animated: linear-gradient(-45deg, 
+        rgba(168, 85, 247, 0.025) 0%, 
+        rgba(6, 182, 212, 0.015) 25%, 
+        rgba(16, 185, 129, 0.01) 50%, 
+        rgba(168, 85, 247, 0.015) 75%, 
+        rgba(6, 182, 212, 0.025) 100%
+      );
       
       /* Enhanced visual effects */
       --focus-ring: 0 0 0 3px rgba(168, 85, 247, 0.5);
@@ -85,6 +88,24 @@ import AnimatedStats from '../components/AnimatedStats';
       padding: 0;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Optimized Animated Background Layer */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-animated);
+      background-size: 200% 200%;
+      animation: gradientFlow 20s ease-in-out infinite;
+      z-index: -1;
+      opacity: 1;
+      will-change: background-position;
+      transform: translateZ(0); /* Hardware acceleration */
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -124,6 +145,32 @@ import AnimatedStats from '../components/AnimatedStats';
       100% { transform: translateX(200%); }
     }
 
+    @keyframes gradientFlow {
+      0% {
+        background-position: 0% 50%;
+      }
+      25% {
+        background-position: 50% 0%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      75% {
+        background-position: 50% 100%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Fallback for reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none;
+        background-position: 50% 50%;
+      }
+    }
+
     .hero {
       min-height: 100vh;
       display: flex;
@@ -137,7 +184,7 @@ import AnimatedStats from '../components/AnimatedStats';
     .hero-bg {
       position: absolute;
       inset: 0;
-      background: var(--bg-hero);
+      background: transparent;
       animation: heroGlow 8s ease-in-out infinite;
     }
 
@@ -295,9 +342,13 @@ import AnimatedStats from '../components/AnimatedStats';
       text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
     }
 
-    /* Professional Journey */
-    .journey {
-      background: var(--bg-journey);
+    /* All Sections - Remove individual backgrounds */
+    .journey,
+    .homelab,
+    .about,
+    .contact {
+      background: transparent;
+      position: relative;
     }
 
     .timeline {
@@ -389,16 +440,12 @@ import AnimatedStats from '../components/AnimatedStats';
       line-height: 1.6;
     }
 
-    /* Homelab Empire */
-    .homelab {
-      background: var(--bg-homelab);
-    }
-
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-md);
+      gap: var(--space-lg);
       margin-bottom: var(--space-xl);
+      align-items: stretch; /* Ensure all cards have equal height */
     }
 
     .service-card {
@@ -410,6 +457,9 @@ import AnimatedStats from '../components/AnimatedStats';
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* Use full available height */
     }
 
     .service-card::before {
@@ -455,6 +505,9 @@ import AnimatedStats from '../components/AnimatedStats';
     .service-list {
       list-style: none;
       color: var(--text-secondary);
+      flex: 1; /* Take up remaining space */
+      margin: 0;
+      padding: 0;
     }
 
     .service-list li {
@@ -521,10 +574,6 @@ import AnimatedStats from '../components/AnimatedStats';
       font-size: var(--text-sm);
     }
 
-    /* About Section */
-    .about {
-      background: var(--bg-about);
-    }
 
     .about-grid {
       display: grid;
@@ -552,18 +601,23 @@ import AnimatedStats from '../components/AnimatedStats';
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-xs);
+      gap: var(--space-sm);
+      align-items: stretch;
     }
 
     .tool-tag {
       background: var(--bg-tertiary);
       border: 1px solid var(--border-color);
       color: var(--text-primary);
-      padding: 0.75rem;
+      padding: var(--space-sm);
       border-radius: var(--radius-sm);
       text-align: center;
       font-weight: 500;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
     }
 
     .tool-tag:hover {
@@ -572,17 +626,14 @@ import AnimatedStats from '../components/AnimatedStats';
       transform: translateY(-2px);
     }
 
-    /* Contact */
-    .contact {
-      background: var(--bg-contact);
-      position: relative;
-    }
 
     .contact-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-xl);
       margin-bottom: var(--space-xl);
+      align-items: stretch;
+      justify-content: center;
     }
 
     .contact-card {
@@ -590,13 +641,19 @@ import AnimatedStats from '../components/AnimatedStats';
       backdrop-filter: blur(15px);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
-      padding: var(--space-md);
+      padding: var(--space-lg);
       text-align: center;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       color: inherit;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 140px;
     }
 
     .contact-card::before {
@@ -749,6 +806,96 @@ import AnimatedStats from '../components/AnimatedStats';
       animation-delay: -25s;
     }
 
+    .particle-7 {
+      width: 3px;
+      height: 3px;
+      background: var(--accent-primary);
+      top: 45%;
+      left: 15%;
+      animation-duration: 22s;
+      animation-delay: -8s;
+    }
+
+    .particle-8 {
+      width: 5px;
+      height: 5px;
+      background: var(--accent-secondary);
+      top: 25%;
+      left: 85%;
+      animation-duration: 29s;
+      animation-delay: -12s;
+    }
+
+    .particle-9 {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-tertiary);
+      top: 65%;
+      left: 55%;
+      animation-duration: 33s;
+      animation-delay: -18s;
+    }
+
+    .particle-10 {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-primary);
+      top: 15%;
+      left: 45%;
+      animation-duration: 27s;
+      animation-delay: -22s;
+    }
+
+    .particle-11 {
+      width: 3px;
+      height: 3px;
+      background: var(--accent-secondary);
+      top: 85%;
+      left: 75%;
+      animation-duration: 31s;
+      animation-delay: -5s;
+    }
+
+    .particle-12 {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-tertiary);
+      top: 35%;
+      left: 25%;
+      animation-duration: 24s;
+      animation-delay: -14s;
+    }
+
+    .particle-13 {
+      width: 5px;
+      height: 5px;
+      background: var(--accent-primary);
+      top: 55%;
+      left: 65%;
+      animation-duration: 30s;
+      animation-delay: -28s;
+    }
+
+    .particle-14 {
+      width: 3px;
+      height: 3px;
+      background: var(--accent-secondary);
+      top: 75%;
+      left: 5%;
+      animation-duration: 28s;
+      animation-delay: -16s;
+    }
+
+    .particle-15 {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-tertiary);
+      top: 5%;
+      left: 35%;
+      animation-duration: 34s;
+      animation-delay: -30s;
+    }
+
     @keyframes float {
       0% {
         transform: translateY(100vh) translateX(0px) rotate(0deg);
@@ -771,7 +918,7 @@ import AnimatedStats from '../components/AnimatedStats';
       /* Services Grid Tablet */
       .services-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-sm);
+        gap: var(--space-md);
       }
       
       /* Stats Grid Tablet - Keep horizontal flexbox */
@@ -812,7 +959,7 @@ import AnimatedStats from '../components/AnimatedStats';
       /* Services Grid Mobile */
       .services-grid {
         grid-template-columns: 1fr;
-        gap: var(--space-sm);
+        gap: var(--space-md);
       }
 
       /* Stats Grid Mobile - Keep horizontal flexbox but tighter spacing */
@@ -975,7 +1122,19 @@ import AnimatedStats from '../components/AnimatedStats';
     <div class="particle particle-4"></div>
     <div class="particle particle-5"></div>
     <div class="particle particle-6"></div>
+    <div class="particle particle-7"></div>
+    <div class="particle particle-8"></div>
+    <div class="particle particle-9"></div>
+    <div class="particle particle-10"></div>
+    <div class="particle particle-11"></div>
+    <div class="particle particle-12"></div>
+    <div class="particle particle-13"></div>
+    <div class="particle particle-14"></div>
+    <div class="particle particle-15"></div>
   </div>
+
+  <!-- Hamburger Menu -->
+  <HamburgerMenu client:load />
 
   <!-- Hero Section -->
   <section class="hero">
@@ -986,13 +1145,13 @@ import AnimatedStats from '../components/AnimatedStats';
         <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        Partner Operations Manager & Homelab Architect
+        Manager, Regional Sales Operations & Homelab Architect
         <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>
       </div>
       <p class="hero-description">
-        I'm a hands‑on technologist with a passion for automation and AI. Ex‑DoorDash and ex‑Apple, I now scale beverage robots at Botrista while building and maintaining a self‑hosted infrastructure that would make any systems architect proud.
+        I'm a hands-on technologist specializing in automation, AI, and scalable operations. With experience spanning Apple, DoorDash, and now Botrista, I orchestrate beverage robotics by day while architecting a self-hosted infrastructure that exemplifies modern DevOps excellence.
       </p>
       <div class="hero-buttons">
         <a href="#homelab" class="btn btn-primary">
@@ -1022,9 +1181,9 @@ import AnimatedStats from '../components/AnimatedStats';
   <!-- Homelab Empire -->
   <section id="homelab" class="section homelab">
     <div class="container">
-      <h2 class="section-title" style="color: white;">The Digital Empire</h2>
+      <h2 class="section-title gradient-text">The Digital Empire</h2>
       <p style="text-align: center; color: var(--text-secondary); font-size: var(--text-lg); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
-        A self‑hosted infrastructure orchestrating 50+ Docker containers across segmented VLANs. From AI model inference to autonomous media servers and custom automation, all behind a reverse proxy that rivals most small clouds.
+        A production-grade self-hosted infrastructure managing 50+ containerized services across segmented VLANs. From AI model inference to automated media processing and intelligent orchestration, all unified behind enterprise-level reverse proxy architecture.
       </p>
       
       <div class="services-grid">
@@ -1131,53 +1290,37 @@ import AnimatedStats from '../components/AnimatedStats';
   <ProjectShowcase client:load />
 
   <!-- About Me -->
-  <section class="section about relative">
+  <section id="bio" class="section about relative">
     <div class="container relative z-10">
       <h2 class="section-title gradient-text">The Neural Network Behind The Magic</h2>
       
       <div class="about-grid">
         <div class="about-text">
           <p>
-            Greetings, I'm Zach. By day I orchestrate beverage robotics across the continental U.S. at Botrista; by night I'm experimenting with AI models, optimizing container stacks and fine‑tuning home automation. My homelab doesn't just run services—it advances my understanding of everything from networking to AI.
+            I'm Zach, a seasoned operations professional who bridges the gap between enterprise technology and innovative automation. By day, I orchestrate beverage robotics operations across the continental U.S. at Botrista. By night, I design and maintain a sophisticated homelab environment where I experiment with AI models, optimize containerized workloads, and develop intelligent automation solutions.
           </p>
           
           <p>
-            With over a decade of experience in AppleCare, Chowbotics/DoorDash and now Botrista, I bridge enterprise reliability and cutting‑edge technology. I believe the best solutions come from understanding both the infrastructure and the human experience.
+            With over a decade of experience spanning Apple, DoorDash (Chowbotics), and Botrista, I've developed expertise in scaling complex technical operations while maintaining enterprise-grade reliability. My approach combines deep technical knowledge with a focus on user experience, believing that the most effective solutions are those that seamlessly integrate infrastructure complexity with human-centered design.
           </p>
         </div>
-
-        <div>
-          <h3 style="font-size: var(--text-2xl); font-weight: 600; margin-bottom: var(--space-md); color: var(--text-primary);">
-            Arsenal of Digital Sorcery
-          </h3>
-          
-          <div class="tools-grid">
-            <div class="tool-tag">Unraid</div>
-            <div class="tool-tag">Docker Compose</div>
-            <div class="tool-tag">Stable Diffusion</div>
-            <div class="tool-tag">Local LLMs</div>
-            <div class="tool-tag">n8n Automation</div>
-            <div class="tool-tag">Grafana</div>
-            <div class="tool-tag">Unifi Controller</div>
-            <div class="tool-tag">Linux Systems</div>
-            <div class="tool-tag">Network Architecture</div>
-            <div class="tool-tag">Robotics Support</div>
-            <div class="tool-tag">Operations at Scale</div>
-            <div class="tool-tag">Open WebUI</div>
-          </div>
-        </div>
+      </div>
+      
+      <!-- Interactive Tools Section -->
+      <div style="margin-top: var(--space-2xl);">
+        <InteractiveTools client:load />
       </div>
     </div>
   </section>
 
   <!-- Contact -->
-  <section class="section contact relative">
+  <section id="contact" class="section contact relative">
     <div class="container relative z-10">
       <h2 class="section-title gradient-text">Initialize Connection Protocol</h2>
       
       <p style="text-align: center; font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
-        Ready to discuss robotics domination, homelab supremacy, or the inevitable AI uprising? 
-        Let's establish a secure connection and geek out about the future!
+        Interested in discussing automation strategies, infrastructure architecture, or collaborative opportunities? 
+        I'm always open to connecting with fellow technologists and exploring innovative solutions.
       </p>
 
       <div class="contact-grid">
@@ -1207,12 +1350,25 @@ import AnimatedStats from '../components/AnimatedStats';
         </div>
       </div>
 
+      <!-- Call to Action -->
+      <div style="text-align: center; margin: var(--space-2xl) 0;">
+        <a href="mailto:zachgonser@me.com?subject=Let's%20Connect%20-%20Infrastructure%20%26%20Automation" class="btn btn-primary">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          Let's Connect & Collaborate
+        </a>
+        <p style="margin-top: var(--space-sm); color: var(--text-muted); font-size: var(--text-sm);">
+          Open to discussing automation projects, infrastructure consulting, or just geeking out about technology
+        </p>
+      </div>
+
       <div style="text-align: center; border-top: 1px solid var(--border-color); padding-top: var(--space-lg); color: var(--text-muted);">
         <p>
           © 2025 Zach Gonser. Built with Astro, React, and way too much caffeine.
         </p>
-        <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">
-          Try the Konami code for a surprise! ↑↑↓↓←→←→BA
+        <p style="font-size: var(--text-sm); margin-top: var(--space-xs); opacity: 0.7;">
+          🔬 Secret Lab Access: Try the Konami code ↑↑↓↓←→←→BA
         </p>
       </div>
     </div>
@@ -1263,7 +1419,7 @@ import AnimatedStats from '../components/AnimatedStats';
           width: 100%;
           height: 100%;
           background: rgba(255, 0, 0, 0.3);
-          z-index: 10000;
+          z-index: 999998;
           animation: alertFlash 0.5s ease-in-out 6;
           pointer-events: none;
         `;
@@ -1285,7 +1441,7 @@ import AnimatedStats from '../components/AnimatedStats';
           font-size: 24px;
           font-weight: bold;
           text-align: center;
-          z-index: 10001;
+          z-index: 999999;
           box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
           animation: alertPulse 1s ease-in-out infinite;
         `;
@@ -1294,8 +1450,20 @@ import AnimatedStats from '../components/AnimatedStats';
 
         // Stealth Camo Effect - make website "invisible"
         setTimeout(() => {
-          document.body.style.filter = 'opacity(0.1) blur(2px)';
-          document.body.style.transition = 'filter 2s ease-in-out';
+          // Create a backdrop div that gets blurred instead of the whole body
+          const blurBackdrop = document.createElement('div');
+          blurBackdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999997;
+            transition: all 2s ease-in-out;
+          `;
+          document.body.appendChild(blurBackdrop);
           
           // Show Kojima-style codec message
           const codecMessage = document.createElement('div');
@@ -1309,7 +1477,7 @@ import AnimatedStats from '../components/AnimatedStats';
             border-radius: 15px;
             padding: 30px;
             max-width: 600px;
-            z-index: 10002;
+            z-index: 1000000;
             font-family: 'Space Grotesk', monospace;
             color: #00ff41;
             box-shadow: 0 0 50px rgba(15, 52, 96, 0.8);
@@ -1355,10 +1523,9 @@ import AnimatedStats from '../components/AnimatedStats';
           
           // Auto-close after 8 seconds
           setTimeout(() => {
-            document.body.style.filter = '';
-            document.body.style.transition = '';
             if (document.body.contains(alertOverlay)) document.body.removeChild(alertOverlay);
             if (document.body.contains(alertBanner)) document.body.removeChild(alertBanner);
+            if (document.body.contains(blurBackdrop)) document.body.removeChild(blurBackdrop);
             if (document.body.contains(codecMessage)) document.body.removeChild(codecMessage);
           }, 8000);
           
