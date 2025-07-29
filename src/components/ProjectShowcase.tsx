@@ -258,9 +258,9 @@ export default function ProjectShowcase() {
           </p>
         </motion.div>
 
-        {/* Desktop Grid View */}
+        {/* Responsive Grid View */}
         <motion.div
-          className="hidden md:grid md:grid-cols-3"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -275,8 +275,8 @@ export default function ProjectShowcase() {
           ))}
         </motion.div>
 
-        {/* Mobile Carousel View */}
-        <div className="md:hidden relative overflow-hidden">
+        {/* Legacy Mobile Carousel View - Hidden */}
+        <div className="hidden relative overflow-hidden">
           <motion.div
             className="flex"
             animate={{ x: `calc(-${currentIndex * 100}% - ${currentIndex * 1.5}rem)` }}

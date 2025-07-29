@@ -1,5 +1,8 @@
 # Personal Website
 
+[![CI](https://github.com/zachyzissou/personal-website/actions/workflows/ci.yml/badge.svg)](https://github.com/zachyzissou/personal-website/actions/workflows/ci.yml)
+[![Deploy](https://github.com/zachyzissou/personal-website/actions/workflows/deploy.yml/badge.svg)](https://github.com/zachyzissou/personal-website/actions/workflows/deploy.yml)
+
 A modern, responsive personal portfolio built with cutting-edge technologies including Astro, React, Tailwind CSS, and Framer Motion.
 
 ## 🚀 Tech Stack

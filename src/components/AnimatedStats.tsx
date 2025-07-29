@@ -219,12 +219,12 @@ export default function AnimatedStats() {
       className="relative w-full bg-white/5 backdrop-blur-3xl rounded-3xl shadow-2xl shadow-purple-500/10"
       style={{ padding: 'var(--space-lg)' }}
     >
-      {/* Unified Stats Container with Internal Dividers */}
-      <div className="flex flex-col sm:flex-row items-stretch">
+      {/* Unified Stats Container with Responsive Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
         {statsData.map((stat, index) => (
           <div 
             key={stat.id} 
-            className={`flex-1 relative ${
+            className={`relative ${
               index < statsData.length - 1 ? 'sm:border-r sm:border-white/10' : ''
             }`}
           >
