@@ -416,7 +416,7 @@ const InteractiveTools: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              zIndex: 9999,
+              zIndex: 10000000,
               padding: '2rem',
               cursor: 'pointer'
             }}
