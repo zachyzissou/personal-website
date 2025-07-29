@@ -304,11 +304,11 @@ export default function ProjectShowcase() {
           <motion.div
             className="flex"
             animate={{ x: `-${currentIndex * 100}%` }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
             style={{ gap: '0' }}
             drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.1}
+            dragConstraints={{ left: -50, right: 50 }}
+            dragElastic={0.2}
             onDragEnd={handleDragEnd}
           >
             {projects.map((project, index) => (
