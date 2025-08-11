@@ -300,7 +300,10 @@ export default function ProjectShowcase() {
         {/* Mobile Carousel View */}
         {isMobile && (
           <div className="relative overflow-hidden"
-            style={{ \n              marginBottom: 'var(--space-xl)',\n              touchAction: 'pan-x pinch-zoom'\n            }}
+            style={{ 
+              marginBottom: 'var(--space-xl)',
+              touchAction: 'pan-x pinch-zoom'
+            }}
           >
           <motion.div
             className="flex"
