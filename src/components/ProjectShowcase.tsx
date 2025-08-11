@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import type { PanInfo } from 'framer-motion';
 import { 
   CpuChipIcon,
   BoltIcon, 
@@ -211,7 +212,7 @@ export default function ProjectShowcase() {
     setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
   };
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (_event: PointerEvent, info: PanInfo) => {
     const threshold = 75;
     const velocity = Math.abs(info.velocity.x);
     const offset = info.offset.x;
@@ -300,7 +301,10 @@ export default function ProjectShowcase() {
         {/* Mobile Carousel View */}
         {isMobile && (
           <div className="relative overflow-hidden"
-            style={{ \n              marginBottom: 'var(--space-xl)',\n              touchAction: 'pan-x pinch-zoom'\n            }}
+            style={{ 
+              marginBottom: 'var(--space-xl)',
+              touchAction: 'pan-x pinch-zoom'
+            }}
           >
           <motion.div
             className="flex"

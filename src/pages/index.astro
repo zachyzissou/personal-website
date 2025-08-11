@@ -11,7 +11,7 @@ import InteractiveTools from '../components/InteractiveTools';
 
 <Layout title="Zach Gonser - Tech Wizard & Homelab Architect">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+    /* Removed blocking @import - fonts now loaded in <head> with display=swap */
 
     :root {
       /* DESIGN SYSTEM COLORS */
@@ -80,8 +80,57 @@ import InteractiveTools from '../components/InteractiveTools';
       --shimmer-gradient: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     }
 
+    /* Enhanced focus styles for accessibility */
+    *:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+    
+    *:focus:not(:focus-visible) {
+      outline: none;
+    }
+    
+    *:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* Skip Links for Accessibility */
+    .skip-links {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      z-index: 10000;
+    }
+    
+    .skip-link {
+      position: absolute;
+      left: -10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      background: var(--accent-primary);
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 0 0 4px 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .skip-link:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      left: 6px;
+      top: 6px;
+      z-index: 10001;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       margin: 0;
@@ -89,6 +138,7 @@ import InteractiveTools from '../components/InteractiveTools';
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+      font-display: swap;
     }
 
     /* Optimized Animated Background Layer */
@@ -109,8 +159,9 @@ import InteractiveTools from '../components/InteractiveTools';
     }
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-weight: 700;
+      font-display: swap;
     }
 
     .gradient-text {
@@ -1159,6 +1210,12 @@ import InteractiveTools from '../components/InteractiveTools';
     }
   </style>
 
+  <!-- Skip Links for Accessibility -->
+  <div class="skip-links">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#navigation" class="skip-link">Skip to navigation</a>
+  </div>
+
   <!-- Floating Particles Background -->
   <div class="floating-particles">
     <div class="particle particle-1"></div>
@@ -1179,13 +1236,18 @@ import InteractiveTools from '../components/InteractiveTools';
   </div>
 
   <!-- Hamburger Menu -->
-  <HamburgerMenu client:load />
+  <nav id="navigation" aria-label="Main navigation">
+    <HamburgerMenu client:load />
+  </nav>
 
+  <!-- Main content wrapper -->
+  <main id="main-content">
+  
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" aria-labelledby="hero-heading">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <h1 class="gradient-text">Zach Gonser</h1>
+      <h1 id="hero-heading" class="gradient-text">Zach Gonser</h1>
       <div class="hero-subtitle flex items-center justify-center gap-3">
         <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -1216,17 +1278,17 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
   </section>
 
   <!-- Professional Journey -->
-  <section id="journey" class="section journey relative">
+  <section id="journey" class="section journey relative" aria-labelledby="journey-heading">
     <div class="container relative z-10">
-      <h2 class="section-title gradient-text mb-16">Professional Experience</h2>
+      <h2 id="journey-heading" class="section-title gradient-text mb-16">Professional Experience</h2>
       <Timeline client:load />
     </div>
   </section>
 
   <!-- Homelab Empire -->
-  <section id="homelab" class="section homelab">
+  <section id="homelab" class="section homelab" aria-labelledby="homelab-heading">
     <div class="container">
-      <h2 class="section-title gradient-text">The Digital Empire</h2>
+      <h2 id="homelab-heading" class="section-title gradient-text">The Digital Empire</h2>
       <p style="text-align: center; color: var(--text-secondary); font-size: var(--text-lg); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
         A production-grade self-hosted infrastructure managing 50+ containerized services across segmented VLANs. From AI model inference to automated media processing and intelligent orchestration, all unified behind enterprise-level reverse proxy architecture.
       </p>
@@ -1335,9 +1397,9 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
   <ProjectShowcase client:load />
 
   <!-- About Me -->
-  <section id="bio" class="section about relative">
+  <section id="bio" class="section about relative" aria-labelledby="about-heading">
     <div class="container relative z-10">
-      <h2 class="section-title gradient-text">The Neural Network Behind The Magic</h2>
+      <h2 id="about-heading" class="section-title gradient-text">The Neural Network Behind The Magic</h2>
       
       <div class="about-grid">
         <div class="about-text">
@@ -1359,9 +1421,9 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section contact relative">
+  <section id="contact" class="section contact relative" aria-labelledby="contact-heading">
     <div class="container relative z-10">
-      <h2 class="section-title gradient-text">Initialize Connection Protocol</h2>
+      <h2 id="contact-heading" class="section-title gradient-text">Initialize Connection Protocol</h2>
       
       <p style="text-align: center; font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-xl); max-width: var(--max-width-text); margin-left: auto; margin-right: auto;">
         Interested in discussing automation strategies, infrastructure architecture, or collaborative opportunities? 
@@ -1419,9 +1481,21 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
     </div>
   </section>
 
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo" style="background: var(--bg-secondary); padding: var(--space-lg) 0; border-top: 1px solid var(--border-color); margin-top: var(--space-xl);">
+    <div class="container" style="text-align: center;">
+      <p style="color: var(--text-muted); font-size: var(--text-sm); margin: 0;">
+        Made with ❤️ in Roanoke, TX • <a href="#hero-heading" style="color: var(--accent-primary); text-decoration: none;">Back to top</a>
+      </p>
+    </div>
+  </footer>
+
   <script>
     // Secret lab state
-    let secretLabVisible = false;
+    // eslint-disable-next-line no-unused-vars
+    let _secretLabVisible = false;
     
     // Theme persistence and Konami code
     document.addEventListener('DOMContentLoaded', function() {
@@ -1445,7 +1519,8 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
       let konamiIndex = 0;
       
       document.addEventListener('keydown', (e) => {
-        if (e.code === `Key${String.fromCharCode(konamiCode[konamiIndex])}` || e.keyCode === konamiCode[konamiIndex]) {
+        // eslint-disable-next-line security/detect-object-injection
+        if (e.code === `Key${String.fromCharCode(konamiCode[konamiIndex])}` || e.key === String.fromCharCode(konamiCode[konamiIndex])) {
           konamiIndex++;
           if (konamiIndex === konamiCode.length) {
             // Enhanced Secret Lab Access
@@ -1461,11 +1536,11 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
         const existingLab = document.getElementById('secret-lab');
         if (existingLab) {
           existingLab.remove();
-          secretLabVisible = false;
+          _secretLabVisible = false;
           return;
         }
         
-        secretLabVisible = true;
+        _secretLabVisible = true;
         createSecretLabOverlay();
       }
 

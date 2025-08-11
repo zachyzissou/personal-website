@@ -157,8 +157,9 @@ function StatCard({ stat, index }: StatCardProps) {
   return (
     <motion.div
       ref={nodeRef}
-      initial={{ opacity: 1, y: 0, scale: 1 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.9 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
       className="w-full h-full"
     >
       <div 

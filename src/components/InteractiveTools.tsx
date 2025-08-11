@@ -137,6 +137,7 @@ const getToolIcon = (category: string): string => {
     'DNS Filtering': '🛡️',
     'Media Requests': '🎭'
   };
+  // eslint-disable-next-line security/detect-object-injection
   return iconMap[category] || '🔧';
 };
 
@@ -198,6 +199,15 @@ const InteractiveTools: React.FC = () => {
                   zIndex: 2
                 }}
                 onClick={openModal}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal();
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open ${selectedTool.name} in full screen`}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.02)';
                 }}

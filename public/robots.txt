@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
+# Sitemap
 Sitemap: https://zachgonser.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Disallow sensitive paths
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /admin/
+Disallow: /private/
