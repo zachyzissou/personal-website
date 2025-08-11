@@ -11,7 +11,7 @@ import InteractiveTools from '../components/InteractiveTools';
 
 <Layout title="Zach Gonser - Tech Wizard & Homelab Architect">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+    /* Removed blocking @import - fonts now loaded in <head> with display=swap */
 
     :root {
       /* DESIGN SYSTEM COLORS */
@@ -81,7 +81,7 @@ import InteractiveTools from '../components/InteractiveTools';
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       margin: 0;
@@ -89,6 +89,7 @@ import InteractiveTools from '../components/InteractiveTools';
       line-height: 1.6;
       overflow-x: hidden;
       position: relative;
+      font-display: swap;
     }
 
     /* Optimized Animated Background Layer */
@@ -109,8 +110,9 @@ import InteractiveTools from '../components/InteractiveTools';
     }
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-weight: 700;
+      font-display: swap;
     }
 
     .gradient-text {
@@ -1421,7 +1423,7 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
 
   <script>
     // Secret lab state
-    let secretLabVisible = false;
+    let _secretLabVisible = false;
     
     // Theme persistence and Konami code
     document.addEventListener('DOMContentLoaded', function() {
@@ -1445,7 +1447,7 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
       let konamiIndex = 0;
       
       document.addEventListener('keydown', (e) => {
-        if (e.code === `Key${String.fromCharCode(konamiCode[konamiIndex])}` || e.keyCode === konamiCode[konamiIndex]) {
+        if (e.code === `Key${String.fromCharCode(konamiCode[konamiIndex])}` || e.key === String.fromCharCode(konamiCode[konamiIndex])) {
           konamiIndex++;
           if (konamiIndex === konamiCode.length) {
             // Enhanced Secret Lab Access
@@ -1461,11 +1463,11 @@ I'm a hands-on technologist with a passion for automation and AI. Ex-DoorDash an
         const existingLab = document.getElementById('secret-lab');
         if (existingLab) {
           existingLab.remove();
-          secretLabVisible = false;
+          _secretLabVisible = false;
           return;
         }
         
-        secretLabVisible = true;
+        _secretLabVisible = true;
         createSecretLabOverlay();
       }
 
