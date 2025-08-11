@@ -17,6 +17,12 @@ export default function AnimatedText({ texts, duration = 3000 }: AnimatedTextPro
     return () => clearInterval(interval);
   }, [texts.length, duration]);
 
+  // Ensure safe array access
+  const currentText = texts && texts.length > 0 && currentIndex >= 0 && currentIndex < texts.length 
+    // eslint-disable-next-line security/detect-object-injection
+    ? texts[currentIndex] 
+    : '';
+
   return (
     <div className="h-8 flex items-center justify-center">
       <AnimatePresence mode="wait">
@@ -28,7 +34,7 @@ export default function AnimatedText({ texts, duration = 3000 }: AnimatedTextPro
           transition={{ duration: 0.5 }}
           className="block"
         >
-          {texts[currentIndex]}
+          {currentText}
         </motion.span>
       </AnimatePresence>
     </div>

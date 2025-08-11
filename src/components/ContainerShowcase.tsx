@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import type { PanInfo } from 'framer-motion';
 import React, { useState } from 'react';
 
 interface Container {
@@ -162,7 +163,7 @@ export default function ContainerShowcase() {
     setCurrentIndex((prev) => (prev - 1 + categories.length) % categories.length);
   };
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (_event: PointerEvent, info: PanInfo) => {
     const threshold = 75;
     const velocity = Math.abs(info.velocity.x);
     const offset = info.offset.x;

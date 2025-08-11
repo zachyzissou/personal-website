@@ -94,7 +94,7 @@ export default function Timeline() {
       viewport={{ once: true, margin: "-100px" }}
       style={{ gap: 'var(--space-md)' }}
     >
-      {timelineData.map((item, index) => {
+      {timelineData.map((item) => {
         const IconComponent = item.icon;
         
         return (
