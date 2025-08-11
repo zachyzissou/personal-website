@@ -37,29 +37,77 @@ const { title } = Astro.props;
     <meta name="keywords" content="homelab, docker, kubernetes, automation, devops, software engineer, doordash, apple" />
     <link rel="canonical" href="https://zachgonser.com/" />
     
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
+    <!-- Enhanced JSON-LD Structured Data -->
+    <script type="application/ld+json" is:inline>
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Zach Gonser",
       "url": "https://zachgonser.com",
-      "jobTitle": "Software Engineer",
+      "image": "https://zachgonser.com/og-image.svg",
+      "jobTitle": "Partner Operations Manager",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Botrista",
+        "url": "https://botrista.com"
+      },
       "description": "Tech Wizard & Homelab Architect. Ex-DoorDash, ex-Apple engineer specializing in Docker containers, automation, and infrastructure.",
       "alumniOf": [
         {
           "@type": "Organization",
-          "name": "DoorDash"
+          "name": "DoorDash",
+          "url": "https://doordash.com"
         },
         {
-          "@type": "Organization",
-          "name": "Apple"
+          "@type": "Organization", 
+          "name": "Apple",
+          "url": "https://apple.com"
         }
       ],
-      "knowsAbout": ["Docker", "Kubernetes", "Automation", "DevOps", "Homelab", "Software Engineering"],
+      "knowsAbout": [
+        "Docker", 
+        "Kubernetes", 
+        "Automation", 
+        "DevOps", 
+        "Homelab", 
+        "Software Engineering",
+        "Robotics",
+        "AI/ML",
+        "Infrastructure Architecture",
+        "Container Orchestration"
+      ],
       "sameAs": [
         "https://github.com/zachyzissou"
-      ]
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Roanoke",
+        "addressRegion": "TX",
+        "addressCountry": "US"
+      },
+      "email": "zachgonser@me.com",
+      "telephone": "+1-817-832-1601"
+    }
+    </script>
+    
+    <!-- Website Schema -->
+    <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Zach Gonser - Personal Website",
+      "url": "https://zachgonser.com",
+      "description": "Personal website of Zach Gonser, tech wizard and homelab architect, showcasing professional experience and technical projects.",
+      "author": {
+        "@type": "Person",
+        "name": "Zach Gonser"
+      },
+      "inLanguage": "en-US",
+      "copyrightYear": "2025",
+      "copyrightHolder": {
+        "@type": "Person",
+        "name": "Zach Gonser"
+      }
     }
     </script>
     

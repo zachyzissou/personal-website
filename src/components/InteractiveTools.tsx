@@ -137,6 +137,7 @@ const getToolIcon = (category: string): string => {
     'DNS Filtering': '🛡️',
     'Media Requests': '🎭'
   };
+  // eslint-disable-next-line security/detect-object-injection
   return iconMap[category] || '🔧';
 };
 
