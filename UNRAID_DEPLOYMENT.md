@@ -13,9 +13,7 @@ This setup uses GitHub-hosted runners for CI/CD, building and pushing Docker ima
 1. **Install Community Applications plugin** (if not already installed)
 2. **Search for "personal-website"** in Community Applications
 3. **Click Install** and configure the settings:
-   - **Web Port**: `18475` (or your preferred port)
-   - **Health Check Port**: `18476` (optional)
-   - **Application Data**: `/mnt/user/appdata/personal-website` (optional)
+   - **Web Port**: `18475` (maps to container port 8080)
 
 ### Option 2: Manual Docker Installation
 
@@ -24,8 +22,7 @@ This setup uses GitHub-hosted runners for CI/CD, building and pushing Docker ima
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
-  -p 18475:80 \
-  -p 18476:8080 \
+  -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
 
@@ -39,8 +36,7 @@ services:
     container_name: personal-website
     restart: unless-stopped
     ports:
-      - "18475:80"      # Web interface
-      - "18476:8080"    # Health check (optional)
+      - "18475:8080"    # Web interface (nginx listens on 8080)
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -62,8 +58,7 @@ services:
 ## 🔧 Configuration
 
 ### Port Mapping
-- **Port 18475**: Main website access (maps to container port 80)
-- **Port 18476**: Health check endpoint (maps to container port 8080)
+- **Port 18475**: Main website access (maps to container port 8080)
 
 ### Volume Mapping (Optional)
 - **Application Data**: `/mnt/user/appdata/personal-website` → `/usr/share/nginx/html`
@@ -87,7 +82,7 @@ docker rm personal-website
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
-  -p 18475:80 \
+  -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
 
@@ -102,7 +97,7 @@ docker-compose up -d
 ### Health Checks
 The container includes built-in health monitoring:
 - **Internal**: `http://localhost:8080/health`
-- **External**: `http://your-unraid-ip:18476/health`
+- **External**: `http://your-unraid-ip:18475/health`
 
 ### Container Status
 ```bash
@@ -141,7 +136,7 @@ The container supports standard nginx environment variables:
 docker run -d \
   --name personal-website \
   -e TZ=America/New_York \
-  -p 18475:80 \
+  -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
 
