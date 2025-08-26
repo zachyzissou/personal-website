@@ -1,158 +1,141 @@
 #!/bin/bash
 
-# Unraid Environment Setup Script
-# Run this once on your Unraid server to prepare for deployments
+# Unraid Personal Website Container Setup Script
+# This script helps set up the personal website container on Unraid
 
-echo "🔧 Setting up Unraid environment for personal website deployment..."
+echo "🔧 Setting up personal website container on Unraid..."
 
 # Define paths
 APP_DATA_PATH="/mnt/user/appdata/personal-website"
-RUNNER_DATA_PATH="/mnt/user/appdata/github_runner-personal-website"
+COMPOSE_FILE="${APP_DATA_PATH}/docker-compose.yml"
 
 # Create necessary directories
 echo "📁 Creating application directories..."
-mkdir -p "${APP_DATA_PATH}/dist"
-mkdir -p "${APP_DATA_PATH}/backups"
+mkdir -p "${APP_DATA_PATH}"
 mkdir -p "${APP_DATA_PATH}/logs"
-mkdir -p "${RUNNER_DATA_PATH}/persistent_files"
 
 # Set proper permissions
 echo "🔐 Setting directory permissions..."
 chmod -R 755 "${APP_DATA_PATH}"
-chmod -R 755 "${RUNNER_DATA_PATH}"
 
-# Create initial nginx config if needed
-if [ ! -f "${APP_DATA_PATH}/nginx.conf" ]; then
-    echo "📝 Creating initial nginx configuration..."
-    cat > "${APP_DATA_PATH}/nginx.conf" << 'EOF'
-events {
-    worker_connections 1024;
-}
-
-http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
-    
-    # Gzip compression
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-    
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    
-    server {
-        listen 80;
-        server_name localhost;
-        root /usr/share/nginx/html;
-        index index.html;
-        
-        # Security
-        server_tokens off;
-        
-        # Main location
-        location / {
-            try_files $uri $uri/ /index.html;
-            
-            # Cache static assets
-            location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-                expires 1y;
-                add_header Cache-Control "public, immutable";
-            }
-        }
-        
-        # Health check endpoint
-        location /health {
-            access_log off;
-            return 200 "healthy\n";
-            add_header Content-Type text/plain;
-        }
-        
-        # Deny access to sensitive files
-        location ~ /\. {
-            deny all;
-        }
-    }
-}
-EOF
-fi
-
-# Create initial docker-compose if needed
-if [ ! -f "${APP_DATA_PATH}/docker-compose.yml" ]; then
-    echo "🐳 Creating initial docker-compose configuration..."
-    cat > "${APP_DATA_PATH}/docker-compose.yml" << 'EOF'
+# Create docker-compose.yml if it doesn't exist
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo "🐳 Creating docker-compose.yml..."
+    cat > "$COMPOSE_FILE" << 'EOF'
 version: '3.8'
 
 services:
   personal-website:
+    image: ghcr.io/zachyzissou/personal-website:latest
     container_name: personal-website
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "18475:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
+    ports:
+      - "18475:8080"    # Main web interface (nginx listens on 8080)
+    environment:
+      - NODE_ENV=production
+      - TZ=America/New_York  # Adjust to your timezone
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     networks:
-      - web
+      - personal-website-net
     labels:
-      # Traefik labels (uncomment and configure if using Traefik)
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.personal-website.rule=Host(`yourdomain.com`)"
-      # - "traefik.http.routers.personal-website.tls=true"
-      # - "traefik.http.routers.personal-website.tls.certresolver=lets-encrypt"
-      # - "traefik.http.services.personal-website.loadbalancer.server.port=80"
-      
-      # Nginx Proxy Manager labels (uncomment if using NPM)
-      # - "nginx-proxy-manager.enable=true"
-      # - "nginx-proxy-manager.http.routers.personal-website.rule=Host(`yourdomain.com`)"
+      - "traefik.enable=true"
+      - "traefik.http.routers.personal-website.rule=Host(\`zachgonser.com\`)"
+      - "traefik.http.services.personal-website.loadbalancer.server.port=80"
 
 networks:
-  web:
-    external: true
+  personal-website-net:
+    driver: bridge
 EOF
 fi
 
-# Create log rotation config
-echo "📊 Setting up log rotation..."
-cat > "/etc/logrotate.d/personal-website" << 'EOF'
-/mnt/user/appdata/personal-website/logs/*.log {
-    daily
-    missingok
-    rotate 14
-    compress
-    delaycompress
-    copytruncate
-    notifempty
-}
+# Create deployment script
+echo "📜 Creating deployment script..."
+cat > "${APP_DATA_PATH}/deploy.sh" << 'EOF'
+#!/bin/bash
+
+echo "🚀 Deploying personal website container..."
+
+cd /mnt/user/appdata/personal-website
+
+# Pull latest image
+echo "📥 Pulling latest image..."
+docker-compose pull
+
+# Stop existing container
+echo "🛑 Stopping existing container..."
+docker-compose down
+
+# Start with new image
+echo "🆙 Starting container..."
+docker-compose up -d
+
+# Wait for health check
+echo "⏳ Waiting for health check..."
+sleep 30
+
+# Check container status
+if docker ps | grep -q personal-website; then
+    echo "✅ Container is running!"
+    
+    # Test health endpoint
+    if curl -f -s http://localhost:18475/health > /dev/null 2>&1; then
+        echo "✅ Health check passed!"
+        echo "🌐 Website is available at: http://localhost:18475"
+    else
+        echo "⚠️ Health check failed, but container is running"
+    fi
+else
+    echo "❌ Container failed to start"
+    echo "🔍 Checking logs..."
+    docker logs personal-website --tail 20
+fi
 EOF
 
+chmod +x "${APP_DATA_PATH}/deploy.sh"
+
+# Create update script
+echo "🔄 Creating update script..."
+cat > "${APP_DATA_PATH}/update.sh" << 'EOF'
+#!/bin/bash
+
+echo "🔄 Updating personal website..."
+
+cd /mnt/user/appdata/personal-website
+
+# Check if container is running
+if docker ps | grep -q personal-website; then
+    echo "📊 Current container status:"
+    docker ps | grep personal-website
+fi
+
+# Pull and deploy
+./deploy.sh
+
+echo "✅ Update completed!"
+EOF
+
+chmod +x "${APP_DATA_PATH}/update.sh"
+
 # Create monitoring script
-echo "📈 Creating monitoring script..."
+echo "📊 Creating monitoring script..."
 cat > "${APP_DATA_PATH}/monitor.sh" << 'EOF'
 #!/bin/bash
 
-# Simple monitoring script for personal website
 LOG_FILE="/mnt/user/appdata/personal-website/logs/monitor.log"
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Check if container is running
-if docker ps | grep -q "personal-website"; then
-    echo "[$DATE] ✅ Container is running" >> "$LOG_FILE"
-    
-    # Check if website is responding
-    if curl -f -s http://localhost:18475/health > /dev/null; then
-        echo "[$DATE] ✅ Website is healthy" >> "$LOG_FILE"
+if docker ps | grep -q personal-website; then
+    # Check health endpoint
+    if curl -f -s --connect-timeout 5 "http://localhost:18475/health" > /dev/null 2>&1; then
+        echo "[$DATE] ✅ Container is healthy" >> "$LOG_FILE"
     else
-        echo "[$DATE] ❌ Website health check failed" >> "$LOG_FILE"
+        echo "[$DATE] ⚠️ Health check failed" >> "$LOG_FILE"
         # Optional: Send notification
         # curl -X POST "YOUR_WEBHOOK_URL" -d '{"text":"⚠️ Personal website health check failed"}'
     fi
@@ -169,20 +152,22 @@ chmod +x "${APP_DATA_PATH}/monitor.sh"
 echo "⏰ Setting up monitoring cron job..."
 (crontab -l 2>/dev/null; echo "*/5 * * * * ${APP_DATA_PATH}/monitor.sh") | crontab -
 
-echo "✅ Unraid environment setup completed!"
+echo "✅ Setup completed!"
 echo ""
 echo "📋 Setup Summary:"
 echo "   • Application data: ${APP_DATA_PATH}"
-echo "   • Runner data: ${RUNNER_DATA_PATH}"
-echo "   • Nginx config: ${APP_DATA_PATH}/nginx.conf"
 echo "   • Docker compose: ${APP_DATA_PATH}/docker-compose.yml"
-echo "   • Monitoring: ${APP_DATA_PATH}/monitor.sh (runs every 5 minutes)"
-echo "   • Logs: ${APP_DATA_PATH}/logs/"
+echo "   • Deploy script: ${APP_DATA_PATH}/deploy.sh"
+echo "   • Update script: ${APP_DATA_PATH}/update.sh"
+echo "   • Monitor script: ${APP_DATA_PATH}/monitor.sh"
 echo ""
-echo "🔄 Next Steps:"
-echo "   1. Configure your domain in docker-compose.yml labels"
-echo "   2. Set up reverse proxy (Traefik/Nginx Proxy Manager)"
-echo "   3. Push to main branch to trigger first deployment"
-echo "   4. Monitor logs: tail -f ${APP_DATA_PATH}/logs/monitor.log"
-
-exit 0
+echo "🚀 To deploy the container:"
+echo "   cd ${APP_DATA_PATH} && ./deploy.sh"
+echo ""
+echo "🔄 To update the container:"
+echo "   cd ${APP_DATA_PATH} && ./update.sh"
+echo ""
+echo "📊 Monitor logs:"
+echo "   tail -f ${APP_DATA_PATH}/logs/monitor.log"
+echo ""
+echo "🌐 Access website: http://your-unraid-ip:18475"
