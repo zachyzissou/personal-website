@@ -22,5 +22,4 @@
   <DonateLink/>
   <Requires/>
   <Config Name="Web Port" Target="8080" Default="18475" Mode="tcp" Description="Port for accessing the website" Type="Port" Display="always" Required="true" Mask="false">18475</Config>
-  <Config Name="Application Data" Target="/usr/share/nginx/html" Default="/mnt/user/appdata/personal-website" Mode="rw" Description="Path to store website data (optional, for customization)" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/personal-website</Config>
 </Container>
