@@ -41,7 +41,7 @@ npm run preview
 
 ### 🚨 Quick Start for Unraid Users
 
-**Getting "unauthorized" errors?** This is common! Choose one of these solutions:
+**Getting "unauthorized" errors?** This is common! See [DOCKER_AUTH_FIX.md](DOCKER_AUTH_FIX.md) for quick solutions, or choose one below:
 
 #### Option 1: Build Locally (Easiest)
 ```bash
@@ -116,6 +116,8 @@ docker: Error response from daemon: Head "https://ghcr.io/v2/zachyzissou/persona
 ```
 
 **This happens because GitHub Container Registry packages from private repositories are private by default.**
+
+📋 **Quick Reference**: See [DOCKER_AUTH_FIX.md](DOCKER_AUTH_FIX.md) for a condensed troubleshooting guide.
 
 #### Quick Fix Options:
 
