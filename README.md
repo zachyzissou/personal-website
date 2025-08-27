@@ -286,3 +286,5 @@ See `UNRAID_DEPLOYMENT.md` for comprehensive Unraid deployment guide including:
 ## 📄 License
 
 MIT License - feel free to use this template for your own portfolio!
+
+<!-- This comment triggers the GitHub Actions workflow -->
