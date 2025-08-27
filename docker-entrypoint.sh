@@ -72,16 +72,23 @@ update_once() {
   fi
 }
 
-# Initial update before starting nginx
-update_once
-
-# Start periodic updater in background
-(
-  while true; do
-    sleep "$UPDATE_INTERVAL_SECONDS"
-    update_once || log "⚠️ Periodic update failed"
-  done
-) &
+# Check if auto-updates are enabled (default: enabled)
+if [ "${ENABLE_AUTO_UPDATE:-true}" = "true" ]; then
+  log "🔄 Auto-update enabled, checking for updates every $UPDATE_INTERVAL_SECONDS seconds"
+  
+  # Initial update check
+  update_once
+  
+  # Start periodic updater in background
+  (
+    while true; do
+      sleep "$UPDATE_INTERVAL_SECONDS"
+      update_once || log "⚠️ Periodic update failed"
+    done
+  ) &
+else
+  log "🔄 Auto-update disabled, using built-in site"
+fi
 
 log "🚀 Starting nginx..."
 exec "$@"
