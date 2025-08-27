@@ -48,7 +48,7 @@ Images are automatically built and published to GitHub Container Registry:
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
-  -p 18475:80 \
+  -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
 
