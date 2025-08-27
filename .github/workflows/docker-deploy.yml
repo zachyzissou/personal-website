@@ -77,9 +77,14 @@ jobs:
       run: |
         echo "🎉 Docker image built and pushed successfully!"
         echo "📋 To deploy on your Unraid server:"
+        echo ""
+        echo "⚠️  IMPORTANT: Make sure the package is public for unauthenticated pulls:"
+        echo "   Go to: https://github.com/${{ github.repository }}/pkgs/container/personal-website"
+        echo "   Set visibility to 'Public' in package settings"
+        echo ""
         echo "   1. Use the provided Unraid XML template"
         echo "   2. Or pull the image: ghcr.io/${{ github.repository }}:latest"
-        echo "   3. Run with port 18475:80 mapping"
+        echo "   3. Run with port 18475:8080 mapping"
         echo "🌐 Image available at: ghcr.io/${{ github.repository }}:latest"
         
     - name: Notify deployment

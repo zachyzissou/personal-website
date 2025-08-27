@@ -19,6 +19,15 @@ This setup uses GitHub-hosted runners for CI/CD, building and pushing Docker ima
 
 #### Using Docker Command:
 ```bash
+# Option 1: If package is public
+docker run -d \
+  --name personal-website \
+  --restart unless-stopped \
+  -p 18475:8080 \
+  ghcr.io/zachyzissou/personal-website:latest
+
+# Option 2: If package is private (requires authentication)
+echo $GITHUB_PAT | docker login ghcr.io -u USERNAME --password-stdin
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
@@ -147,6 +156,37 @@ If you mount a volume to `/usr/share/nginx/html`, you can:
 - Modify the website
 
 ## 🚨 Troubleshooting
+
+### Container Won't Start - "Unauthorized" Error
+
+If you get an "unauthorized" error when pulling the image:
+
+```
+docker: Error response from daemon: Head "https://ghcr.io/v2/zachyzissou/personal-website/manifests/latest": unauthorized.
+```
+
+**This happens because the GitHub Container Registry package is private by default.**
+
+#### Solution 1: Make Package Public (Recommended)
+1. Go to [GitHub Packages](https://github.com/zachyzissou/personal-website/pkgs/container/personal-website)
+2. Click on "Package settings"  
+3. Scroll to "Danger Zone" → "Change visibility"
+4. Select "Public" and confirm
+
+Or run: `./scripts/make-package-public.sh` for detailed instructions.
+
+#### Solution 2: Use Authentication
+If the package must remain private, authenticate with GitHub:
+
+```bash
+# Login to GitHub Container Registry
+echo $GITHUB_PAT | docker login ghcr.io -u USERNAME --password-stdin
+
+# Then pull the image
+docker pull ghcr.io/zachyzissou/personal-website:latest
+```
+
+You'll need a [Personal Access Token](https://github.com/settings/tokens) with `read:packages` permission.
 
 ### Container Won't Start
 ```bash

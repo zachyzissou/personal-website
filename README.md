@@ -44,13 +44,15 @@ npm run preview
 Images are automatically built and published to GitHub Container Registry:
 
 ```bash
-# Pull and run latest image
+# Pull and run latest image  
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
   -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
+
+⚠️ **If you get "unauthorized" errors:** The GitHub package may be private. See [troubleshooting](#-troubleshooting) below.
 
 ### Using Docker Compose
 
@@ -78,6 +80,39 @@ docker run -p 18475:80 personal-website
 See `UNRAID_DEPLOYMENT.md` for comprehensive Unraid deployment guide including:
 - XML template installation
 - Manual Docker deployment
+
+## 🚨 Troubleshooting
+
+### "Unauthorized" Error When Pulling Docker Image
+
+If you encounter:
+```
+docker: Error response from daemon: Head "https://ghcr.io/v2/zachyzissou/personal-website/manifests/latest": unauthorized.
+```
+
+**This happens because GitHub Container Registry packages from private repositories are private by default.**
+
+#### Quick Fix Options:
+
+1. **Make Package Public** (Easiest):
+   - Go to [Package Settings](https://github.com/zachyzissou/personal-website/pkgs/container/personal-website)
+   - Change visibility to "Public"
+
+2. **Use Authentication**:
+   ```bash
+   echo $GITHUB_PAT | docker login ghcr.io -u USERNAME --password-stdin
+   docker pull ghcr.io/zachyzissou/personal-website:latest
+   ```
+
+3. **Build Locally**:
+   ```bash
+   git clone https://github.com/zachyzissou/personal-website.git
+   cd personal-website
+   docker build -t personal-website .
+   docker run -d --name personal-website -p 18475:8080 personal-website
+   ```
+
+For detailed troubleshooting, see `UNRAID_DEPLOYMENT.md`.
 - Automatic updates
 - Troubleshooting
 

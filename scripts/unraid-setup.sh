@@ -64,7 +64,19 @@ cd /mnt/user/appdata/personal-website
 
 # Pull latest image
 echo "📥 Pulling latest image..."
-docker-compose pull
+if ! docker-compose pull; then
+    echo "❌ Failed to pull image. This may be because the GitHub package is private."
+    echo "🔧 To fix this:"
+    echo "   1. Make the package public: run ./scripts/make-package-public.sh"
+    echo "   2. Or authenticate: docker login ghcr.io -u USERNAME"
+    echo ""
+    echo "⏳ Retrying pull in 5 seconds..."
+    sleep 5
+    docker-compose pull || {
+        echo "❌ Pull failed again. Please check the troubleshooting section in UNRAID_DEPLOYMENT.md"
+        exit 1
+    }
+fi
 
 # Stop existing container
 echo "🛑 Stopping existing container..."
