@@ -132,9 +132,13 @@ else
 fi
 
 # Cleanup temporary files
-print_status "Cleaning up build directory..."
-rm -rf "$REPO_DIR"
-print_success "Cleanup complete"
+if [ -z "$PRESERVE_BUILD" ]; then
+    print_status "Cleaning up build directory..."
+    rm -rf "$REPO_DIR"
+    print_success "Cleanup complete"
+else
+    print_status "Preserving build directory for troubleshooting (set PRESERVE_BUILD= to disable)"
+fi
 
 echo ""
 echo "🎉 Setup complete! Your personal website is ready."
