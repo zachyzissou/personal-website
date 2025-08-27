@@ -1,0 +1,25 @@
+FROM nginx:1.27-alpine
+
+# Install git/node for auto-updater and asset pipeline
+RUN apk add --no-cache curl git nodejs npm wget
+
+# Working directory is the nginx web root
+WORKDIR /usr/share/nginx/html
+
+# Replace nginx config if present in repo
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy the auto-update entrypoint and make executable
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh && \
+    echo '<!DOCTYPE html><html><head><title>Health Check</title></head><body>OK</body></html>' > /usr/share/nginx/html/health
+
+# Expose the port matching the repo nginx config
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Entrypoint runs auto-update loop then starts nginx
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
