@@ -39,7 +39,34 @@ npm run preview
 
 ## 🐳 Docker Deployment
 
-### Pre-built Images (Recommended)
+### 🚨 Quick Start for Unraid Users
+
+**Getting "unauthorized" errors?** This is common! Choose one of these solutions:
+
+#### Option 1: Build Locally (Easiest)
+```bash
+# Automated script for Unraid (recommended)
+curl -sSL https://raw.githubusercontent.com/zachyzissou/personal-website/main/scripts/local-build-unraid.sh | bash
+
+# Or manual steps:
+git clone https://github.com/zachyzissou/personal-website.git
+cd personal-website
+docker build -t personal-website .
+docker run -d --name personal-website -p 18475:8080 personal-website
+```
+
+#### Option 2: Make Package Public
+1. Go to [Package Settings](https://github.com/zachyzissou/personal-website/pkgs/container/personal-website)
+2. Change visibility to "Public"
+3. Then run: `docker pull ghcr.io/zachyzissou/personal-website:latest`
+
+#### Option 3: Use Authentication
+```bash
+echo $GITHUB_PAT | docker login ghcr.io -u USERNAME --password-stdin
+docker pull ghcr.io/zachyzissou/personal-website:latest
+```
+
+### Pre-built Images (When Public)
 
 Images are automatically built and published to GitHub Container Registry:
 
@@ -51,8 +78,6 @@ docker run -d \
   -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
-
-⚠️ **If you get "unauthorized" errors:** The GitHub package may be private. See [troubleshooting](#-troubleshooting) below.
 
 ### Using Docker Compose
 
@@ -104,8 +129,12 @@ docker: Error response from daemon: Head "https://ghcr.io/v2/zachyzissou/persona
    docker pull ghcr.io/zachyzissou/personal-website:latest
    ```
 
-3. **Build Locally**:
+3. **Build Locally** (Recommended):
    ```bash
+   # Automated script for Unraid
+   curl -sSL https://raw.githubusercontent.com/zachyzissou/personal-website/main/scripts/local-build-unraid.sh | bash
+   
+   # Or manual steps
    git clone https://github.com/zachyzissou/personal-website.git
    cd personal-website
    docker build -t personal-website .
