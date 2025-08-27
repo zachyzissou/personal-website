@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>personal-website</Name>
-  <Repository>ghcr.io/zachyzissou/personal-website:latest</Repository>
+  <Repository>zachyzissou/personal-website:latest</Repository>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/zachyzissou/personal-website</Support>
   <Project>https://zachgonser.com</Project>
-  <Overview>Modern personal portfolio website built with Astro, React, and Tailwind CSS. Features responsive design, animations, and container showcase.</Overview>
+  <Overview>Modern personal portfolio website built with Astro, React, and Tailwind CSS. Features responsive design, animations, and container showcase with auto-updates.</Overview>
   <Category>Tools:</Category>
   <WebUI>http://[IP]:[PORT:18475]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/zachyzissou/personal-website/main/personal-website.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/zachyzissou/personal-website/main/public/favicon.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/zacharygonser/personal-website/main/public/favicon.svg</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
@@ -21,7 +21,7 @@
   <DonateLink/>
   <Requires/>
   <Config Name="Web Port" Target="8080" Default="18475" Mode="tcp" Description="Port for accessing the website" Type="Port" Display="always" Required="true" Mask="false">18475</Config>
-  <Config Name="Image Source" Target="" Default="local" Mode="rw" Description="Choose image source: 'local' to use locally built image, 'ghcr' to pull from ghcr.io" Type="Text" Display="always" Required="true" Mask="false">local</Config>
+  <Config Name="Image Source" Target="" Default="dockerhub" Mode="rw" Description="Choose image source: 'dockerhub' to pull from Docker Hub, 'local' to use locally built image" Type="Text" Display="always" Required="true" Mask="false">dockerhub</Config>
   <Config Name="NODE_ENV" Target="NODE_ENV" Default="production" Mode="rw" Description="Node environment" Type="Text" Display="advanced" Required="true" Mask="false">production</Config>
   <Config Name="TZ" Target="TZ" Default="UTC" Mode="rw" Description="Time zone" Type="Text" Display="advanced" Required="true" Mask="false">UTC</Config>
   <Config Name="PUID" Target="PUID" Default="99" Mode="rw" Description="User ID for file permissions" Type="Text" Display="advanced" Required="false" Mask="false">99</Config>
