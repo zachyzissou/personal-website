@@ -12,7 +12,7 @@
   <Overview>Modern personal portfolio website built with Astro, React, and Tailwind CSS. Features responsive design, animations, and container showcase.</Overview>
   <Category>Tools:</Category>
   <WebUI>http://[IP]:[PORT:18475]/</WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/zachyzissou/personal-website/main/unraid-template.xml</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/zachyzissou/personal-website/main/personal-website.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/zachyzissou/personal-website/main/public/favicon.svg</Icon>
   <ExtraParams/>
   <PostArgs/>

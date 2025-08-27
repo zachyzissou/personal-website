@@ -16,6 +16,9 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Debug: Check if build succeeded
+RUN ls -la dist/ && echo "Build files:" && find dist/ -type f | head -10
+
 # Production stage
 FROM nginx:alpine
 
@@ -28,6 +31,11 @@ RUN apk add --no-cache curl
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Debug: Verify files were copied and set permissions
+RUN ls -la /usr/share/nginx/html && \
+    chown -R nginx:nginx /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
 
 
 # Expose port 8080 (non-privileged port)
