@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint-and-test:
-    runs-on: [self-hosted, LinuxX64, personal-website]
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout repository
@@ -54,7 +54,7 @@ jobs:
       continue-on-error: true
 
   preview-build:
-    runs-on: [self-hosted, LinuxX64, personal-website]
+    runs-on: ubuntu-latest
     needs: lint-and-test
     if: github.event_name == 'pull_request'
     

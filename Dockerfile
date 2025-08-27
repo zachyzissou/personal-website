@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies (including dev dependencies for build)
-RUN npm ci --prefer-offline --no-audit
+RUN npm ci --include=dev --prefer-offline --no-audit
 
 # Copy source code (this changes frequently so goes last)
 COPY . .
@@ -23,8 +23,8 @@ FROM nginx:alpine
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Install curl and netcat for debugging and health checks
-RUN apk add --no-cache curl netcat-openbsd
+# Install curl for health checks
+RUN apk add --no-cache curl
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html

@@ -1,14 +1,25 @@
 services:
   personal-website:
-    build: .
+    image: ghcr.io/zachyzissou/personal-website:latest
     container_name: personal-website
     restart: unless-stopped
     ports:
-      - "18475:8080"  # Unique external port for Nginx Proxy Manager
+      - "18475:8080"    # Main web interface (nginx listens on 8080)
     environment:
       - NODE_ENV=production
+      - TZ=America/New_York  # Set your timezone
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - personal-website-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.personal-website.rule=Host(`zachgonser.com`)"
+      - "traefik.http.services.personal-website.loadbalancer.server.port=8080"
 
 networks:
   personal-website-net:

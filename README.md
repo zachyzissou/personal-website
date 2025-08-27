@@ -39,25 +39,47 @@ npm run preview
 
 ## 🐳 Docker Deployment
 
-### Building the Container
+### Pre-built Images (Recommended)
+
+Images are automatically built and published to GitHub Container Registry:
 
 ```bash
-# Build the Docker image
-docker build -t personal-website .
-
-# Run locally
-docker run -p 18475:80 personal-website
+# Pull and run latest image
+docker run -d \
+  --name personal-website \
+  --restart unless-stopped \
+  -p 18475:8080 \
+  ghcr.io/zachyzissou/personal-website:latest
 ```
 
 ### Using Docker Compose
 
 ```bash
-# Start the container
+# Use the provided docker-compose.yml
 docker-compose up -d
 
-# Stop the container
-docker-compose down
+# Or with manual pull
+docker-compose pull
+docker-compose up -d
 ```
+
+### Building Locally
+
+```bash
+# Build the Docker image locally
+docker build -t personal-website .
+
+# Run locally built image
+docker run -p 18475:80 personal-website
+```
+
+### Unraid Deployment
+
+See `UNRAID_DEPLOYMENT.md` for comprehensive Unraid deployment guide including:
+- XML template installation
+- Manual Docker deployment
+- Automatic updates
+- Troubleshooting
 
 ## 🌐 Reverse Proxy Setup
 
@@ -143,40 +165,51 @@ Update the following files with your information:
 4. **Monitor logs** with `docker logs personal-website`
 5. **Update regularly** with `docker-compose pull && docker-compose up -d`
 
-## 🤖 CI/CD & Self-Hosted Deployment
+## 🤖 CI/CD & Deployment
 
-This repository includes GitHub Actions workflows configured for self-hosted runners:
+This repository uses GitHub Actions with GitHub-hosted runners for automated building and deployment:
 
 ### Workflows
 
-1. **`deploy.yml`** - Production deployment on main branch
+1. **`deploy.yml`** - Production deployment: builds and pushes Docker images to GitHub Container Registry
 2. **`ci.yml`** - Continuous integration for PRs and feature branches  
-3. **`docker-deploy.yml`** - Docker-based deployment with health checks
-
-### Self-Hosted Runner Setup
-
-1. Configure a GitHub self-hosted runner on your homelab server
-2. Ensure Docker and Docker Compose are installed on the runner
-3. Set up necessary secrets in GitHub repository settings:
-   - `GITHUB_TOKEN` (automatically provided)
-   - Any additional deployment secrets
+3. **`docker-deploy.yml`** - Enhanced Docker build and push with multi-platform support
 
 ### Deployment Process
 
 **Automatic:**
-- Push to `main` branch triggers production deployment
+- Push to `main` branch triggers production build
+- Docker images are built and pushed to GitHub Container Registry (`ghcr.io/zachyzissou/personal-website`)
 - Pull requests trigger CI checks and preview builds
-- Docker images are built and pushed to GitHub Container Registry
 
-**Manual:**
-- Use GitHub Actions "Run workflow" for manual deployments
-- Choose deployment environment (production/staging)
+**Manual Deployment on Unraid:**
+- Use the provided Unraid XML template for easy installation
+- Or manually deploy using Docker Compose
+- Images are automatically updated via GitHub Actions
+
+### Unraid Setup
+
+**Quick Start:**
+1. **Use Unraid Template**: Add the provided `unraid-template.xml` to your Unraid Docker templates
+2. **Configure Ports**: Main site on port 18475, health checks on 18476
+3. **Deploy**: Container will automatically pull the latest image from GitHub Container Registry
+
+**Manual Setup:**
+```bash
+docker run -d \
+  --name personal-website \
+  --restart unless-stopped \
+  -p 18475:8080 \
+  ghcr.io/zachyzissou/personal-website:latest
+```
+
+See `UNRAID_DEPLOYMENT.md` for comprehensive Unraid deployment guide including:
 
 ### Health Checks
 
-- Automated health checks verify deployment success
+- Automated health checks verify container status
+- Built-in health endpoint at `/health`
 - Container health monitoring included
-- Failure notifications and rollback strategies
 
 ## 📊 Monitoring
 
