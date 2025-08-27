@@ -173,7 +173,7 @@ docker: Error response from daemon: Head "https://ghcr.io/v2/zachyzissou/persona
 3. Scroll to "Danger Zone" → "Change visibility"
 4. Select "Public" and confirm
 
-Or run: `./scripts/make-package-public.sh` for detailed instructions.
+Or use GitHub CLI: `gh api --method PATCH /user/packages/container/personal-website --field visibility=public`
 
 #### Solution 2: Use Authentication
 If the package must remain private, authenticate with GitHub:
