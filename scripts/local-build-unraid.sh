@@ -113,7 +113,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     echo ""
     echo "🌐 Your personal website is now available at:"
     echo "   http://$(ip route get 1 | awk '{print $7; exit}'):${WEB_PORT}"
-    echo "   http://localhost:${WEB_PORT} (if running locally)"
+    echo "   http://localhost:${WEB_PORT} (if accessing from the Unraid server directly)"
     echo ""
     echo "📋 Container Management Commands:"
     echo "   View logs:    docker logs ${CONTAINER_NAME}"
