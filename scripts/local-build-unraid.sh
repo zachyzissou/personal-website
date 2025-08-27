@@ -112,7 +112,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     print_success "Container is running successfully!"
     echo ""
     echo "🌐 Your personal website is now available at:"
-    echo "   http://$(hostname -I | awk '{print $1}'):${WEB_PORT}"
+    echo "   http://$(ip route get 1 | awk '{print $7; exit}'):${WEB_PORT}"
     echo "   http://localhost:${WEB_PORT} (if running locally)"
     echo ""
     echo "📋 Container Management Commands:"
