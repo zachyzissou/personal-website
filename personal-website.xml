@@ -24,4 +24,14 @@
   <Config Name="Image Source" Target="" Default="local" Mode="rw" Description="Choose image source: 'local' to use locally built image, 'ghcr' to pull from ghcr.io" Type="Text" Display="always" Required="true" Mask="false">local</Config>
   <Config Name="NODE_ENV" Target="NODE_ENV" Default="production" Mode="rw" Description="Node environment" Type="Text" Display="advanced" Required="true" Mask="false">production</Config>
   <Config Name="TZ" Target="TZ" Default="UTC" Mode="rw" Description="Time zone" Type="Text" Display="advanced" Required="true" Mask="false">UTC</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="rw" Description="User ID for file permissions" Type="Text" Display="advanced" Required="false" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="rw" Description="Group ID for file permissions" Type="Text" Display="advanced" Required="false" Mask="false">100</Config>
+  <Config Name="Update Interval (seconds)" Target="UPDATE_INTERVAL_SECONDS" Default="600" Mode="rw" Description="How often the container checks GitHub for updates" Type="Text" Display="advanced" Required="false" Mask="false">600</Config>
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/personal-website</HostDir>
+      <ContainerDir>/config</ContainerDir>
+      <Mode>rw</Mode>
+    </Volume>
+  </Data>
 </Container>
