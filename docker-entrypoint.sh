@@ -38,15 +38,17 @@ build_site() {
 
 deploy_site() {
   mkdir -p "$WEBSITE_DIR"
-  rm -rf "$WEBSITE_DIR"/* || true
-  # copy dist output if present, otherwise copy site/ static files
-  if [ -d "$WEBSITE_CLONE/dist" ]; then
-    cp -a "$WEBSITE_CLONE/dist/." "$WEBSITE_DIR/" || log "⚠️ Failed to copy dist"
-  elif [ -d "$WEBSITE_CLONE/site" ]; then
-    cp -a "$WEBSITE_CLONE/site/." "$WEBSITE_DIR/" || log "⚠️ Failed to copy site"
-  else
-    log "⚠️ No built site found in repo"
+  # Only clear and redeploy if we're actually rebuilding
+  if [ -d "$WEBSITE_CLONE/dist" ] || [ -d "$WEBSITE_CLONE/site" ]; then
+    rm -rf "$WEBSITE_DIR"/* || true
+    # copy dist output if present, otherwise copy site/ static files
+    if [ -d "$WEBSITE_CLONE/dist" ]; then
+      cp -a "$WEBSITE_CLONE/dist/." "$WEBSITE_DIR/" || log "⚠️ Failed to copy dist"
+    elif [ -d "$WEBSITE_CLONE/site" ]; then
+      cp -a "$WEBSITE_CLONE/site/." "$WEBSITE_DIR/" || log "⚠️ Failed to copy site"
+    fi
   fi
+  # Always ensure health check exists
   echo '<!DOCTYPE html><html><head><title>Health Check</title></head><body>OK</body></html>' > "$WEBSITE_DIR/health"
   chown -R nginx:nginx "$WEBSITE_DIR" 2>/dev/null || true
   chmod -R 755 "$WEBSITE_DIR" 2>/dev/null || true
@@ -57,6 +59,12 @@ current_commit() {
 }
 
 update_once() {
+  # Check if we have pre-built files and they're working
+  if [ -f "$WEBSITE_DIR/index.html" ] && [ "${ENABLE_AUTO_UPDATE:-true}" = "false" ]; then
+    log "⏭️ Pre-built site exists and auto-update disabled. Skipping update."
+    return
+  fi
+  
   ensure_clones
   NEW_COMMIT=$(current_commit)
   OLD_COMMIT=""
