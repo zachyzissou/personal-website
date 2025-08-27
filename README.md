@@ -199,7 +199,7 @@ This repository uses GitHub Actions with GitHub-hosted runners for automated bui
 docker run -d \
   --name personal-website \
   --restart unless-stopped \
-  -p 18475:80 \
+  -p 18475:8080 \
   ghcr.io/zachyzissou/personal-website:latest
 ```
 
