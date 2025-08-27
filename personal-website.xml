@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>personal-website</Name>
-  <Repository>ghcr.io/zachyzissou/personal-website:latest</Repository>
+  <Repository>docker.io/zachyzissou/personal-website:latest</Repository>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
